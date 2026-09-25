@@ -95,7 +95,7 @@ coil-video = { group = "io.coil-kt", name = "coil-video", version.ref = "coil" }
 accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist" }
 
 # ML Kit (on-device AI, offline capable)
-mlkit-object-detection = { group = "com.google.mlkit", name = "object-detection", version.ref = "mlkitObjectDetection" }
+mlkit-objectdetection = { group = "com.google.mlkit", name = "object-detection", version.ref = "mlkitObjectDetection" }
 mlkit-subject-segmentation = { group = "com.google.mlkit", name = "segmentation-subject", version.ref = "mlkitSubjectSegmentation" }
 
 # Misc

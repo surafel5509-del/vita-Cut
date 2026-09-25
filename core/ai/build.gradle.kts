@@ -34,7 +34,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.coroutines.play.services)
 
-    implementation(libs.mlkit.object.detection)
+    implementation(libs.mlkit.objectdetection)
     implementation(libs.mlkit.subject.segmentation)
 
     implementation(libs.hilt.android)
