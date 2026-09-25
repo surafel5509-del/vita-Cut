@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="export_channel_name">视频导出</string>
+    <string name="export_notification_title">正在导出你的视频</string>
+    <string name="export_progress_notification">已完成 %1$d%%</string>
+    <string name="error_export_failed">导出失败，请重试。</string>
+    <string name="error_insufficient_storage">可用存储空间不足，无法导出此视频。</string>
+    <string name="error_file_missing">此项目使用的某个媒体文件缺失或已被移动。</string>
+    <string name="export_error_no_tracks">时间轴为空——导出前请先添加片段。</string>
+    <string name="export_error_unsupported_codec">此设备无法使用所选编码器导出，请尝试 H.264。</string>
+    <string name="export_error_decoder">媒体解码器启动失败，文件可能已损坏或不受支持。</string>
+    <string name="export_error_encoder">视频编码器启动失败，请尝试更低的分辨率或帧率。</string>
+    <string name="export_error_empty_timeline">没有可导出的内容——时间轴为空。</string>
+    <string name="export_fallback_hevc">此设备不支持 H.265——将以 H.264 导出。</string>
+    <string name="export_fallback_resolution">此分辨率超出设备编码器上限——已选择较低的分辨率。</string>
+    <string name="export_fallback_fps">此设备不支持 60 fps 编码——将以 30 fps 导出。</string>
+</resources>

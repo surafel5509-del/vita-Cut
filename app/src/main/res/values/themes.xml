@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base theme: dark-first, edge-to-edge; Compose draws everything above it. -->
+    <style name="Theme.VitaCut" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/vita_background</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+
+    <!-- Splash screen (androidx.core.splashscreen) handing off to the base theme. -->
+    <style name="Theme.VitaCut.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/vita_background</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="postSplashScreenTheme">@style/Theme.VitaCut</item>
+    </style>
+</resources>
