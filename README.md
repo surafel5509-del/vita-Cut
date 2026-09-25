@@ -113,14 +113,9 @@ Navigation-Compose 2.8.5 · minSdk 26 / targetSdk 35.
 ./gradlew test          # unit tests (model, timeline, export planner, captions, AI, domain)
 ```
 
-Requires JDK 17 and the Android SDK (compileSdk 35).
-
-> **Wrapper bootstrap**: the repository ships `gradlew` / `gradlew.bat` and
-> `gradle/wrapper/gradle-wrapper.properties` (Gradle 8.9). The binary
-> `gradle/wrapper/gradle-wrapper.jar` is not committed (per `.gitignore` practices for binary
-> blobs) — it is downloaded automatically on first `./gradlew` invocation, or generated via
-> `gradle wrapper` if you have Gradle installed locally. Android Studio also generates it on
-> first sync.
+Requires JDK 17 and the Android SDK (compileSdk 35). The Gradle wrapper is fully committed
+(`gradlew`/`gradlew.bat` + `gradle/wrapper/gradle-wrapper.jar` + `gradle-wrapper.properties` for
+Gradle 8.9) — just run `./gradlew` and the distribution is downloaded automatically.
 
 ## Testing
 
