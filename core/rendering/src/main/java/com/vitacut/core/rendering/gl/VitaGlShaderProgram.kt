@@ -114,6 +114,8 @@ object ShaderPaths {
     const val FRAGMENT_FX_DISTORTION = "shaders/fragment_fx_distortion_es2.glsl"
     const val FRAGMENT_FX_CRT = "shaders/fragment_fx_crt_es2.glsl"
     const val FRAGMENT_FX_OLD_FILM = "shaders/fragment_fx_oldfilm_es2.glsl"
+    const val FRAGMENT_FX_STYLIZE = "shaders/fragment_fx_stylize_es2.glsl"
+    const val FRAGMENT_FX_ATMOSPHERE = "shaders/fragment_fx_atmosphere_es2.glsl"
 
     const val FRAGMENT_MASK = "shaders/fragment_mask_es2.glsl"
     const val FRAGMENT_CHROMA_KEY = "shaders/fragment_chroma_key_es2.glsl"

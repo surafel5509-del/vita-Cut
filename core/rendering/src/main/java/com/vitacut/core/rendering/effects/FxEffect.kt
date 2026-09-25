@@ -44,9 +44,9 @@ class FxEffect(
                     glProgram.setFloatUniform("uIntensity", intensity)
                 }
 
-                EffectKind.RGB_SPLIT -> {
+                EffectKind.RGB_SPLIT, EffectKind.CHROMATIC -> {
                     glProgram.setFloatUniform("uIntensity", intensity)
-                    glProgram.setFloatUniform("uAngleDeg", 0f)
+                    glProgram.setFloatUniform("uAngleDeg", if (kind == EffectKind.CHROMATIC) 35f else 0f)
                     glProgram.setFloatUniform("uTimeSec", timeSec)
                 }
 
@@ -85,7 +85,6 @@ class FxEffect(
                 }
 
                 EffectKind.FILM_GRAIN -> {
-                    // Old-film shader, grain-only mode (3).
                     glProgram.setIntUniform("uMode", 3)
                     glProgram.setFloatUniform("uTimeSec", timeSec)
                     glProgram.setFloatUniform("uIntensity", intensity)
@@ -110,57 +109,69 @@ class FxEffect(
                     glProgram.setFloatUniform("uIntensity", intensity)
                 }
 
-                EffectKind.WAVE -> {
-                    glProgram.setIntUniform("uMode", 0)
-                    glProgram.setFloatUniform("uIntensity", intensity)
-                    glProgram.setFloatUniform("uTimeSec", timeSec)
-                    glProgram.setFloatUniform("uAspect", aspectUniform())
-                }
-
-                EffectKind.RIPPLE -> {
-                    glProgram.setIntUniform("uMode", 1)
-                    glProgram.setFloatUniform("uIntensity", intensity)
-                    glProgram.setFloatUniform("uTimeSec", timeSec)
-                    glProgram.setFloatUniform("uAspect", aspectUniform())
-                }
-
-                EffectKind.WARP -> {
-                    glProgram.setIntUniform("uMode", 2)
-                    glProgram.setFloatUniform("uIntensity", intensity)
-                    glProgram.setFloatUniform("uTimeSec", timeSec)
-                    glProgram.setFloatUniform("uAspect", aspectUniform())
-                }
-
-                EffectKind.FISHEYE -> {
-                    glProgram.setIntUniform("uMode", 3)
-                    glProgram.setFloatUniform("uIntensity", intensity)
-                    glProgram.setFloatUniform("uTimeSec", timeSec)
-                    glProgram.setFloatUniform("uAspect", aspectUniform())
-                }
+                EffectKind.WAVE -> distortion(0, intensity, timeSec)
+                EffectKind.RIPPLE -> distortion(1, intensity, timeSec)
+                EffectKind.WARP -> distortion(2, intensity, timeSec)
+                EffectKind.FISHEYE -> distortion(3, intensity, timeSec)
+                EffectKind.MIRROR -> distortion(4, intensity, timeSec)
+                EffectKind.KALEIDOSCOPE -> distortion(5, intensity, timeSec)
 
                 EffectKind.CRT -> {
                     glProgram.setFloatUniform("uTimeSec", timeSec)
                     glProgram.setFloatUniform("uIntensity", intensity)
                 }
 
-                EffectKind.OLD_FILM -> {
-                    glProgram.setIntUniform("uMode", 0)
-                    glProgram.setFloatUniform("uTimeSec", timeSec)
-                    glProgram.setFloatUniform("uIntensity", intensity)
-                }
+                EffectKind.OLD_FILM -> oldFilm(0, intensity, timeSec)
+                EffectKind.DUST -> oldFilm(1, intensity, timeSec)
+                EffectKind.SCRATCHES -> oldFilm(2, intensity, timeSec)
 
-                EffectKind.DUST -> {
-                    glProgram.setIntUniform("uMode", 1)
-                    glProgram.setFloatUniform("uTimeSec", timeSec)
-                    glProgram.setFloatUniform("uIntensity", intensity)
-                }
+                EffectKind.PIXELATE -> stylize(0, intensity, timeSec)
+                EffectKind.POSTERIZE -> stylize(1, intensity, timeSec)
+                EffectKind.HALFTONE -> stylize(2, intensity, timeSec)
+                EffectKind.DUOTONE -> stylize(3, intensity, timeSec)
+                EffectKind.INVERT -> stylize(4, intensity, timeSec)
+                EffectKind.THERMAL -> stylize(5, intensity, timeSec)
+                EffectKind.NIGHT_VISION -> stylize(6, intensity, timeSec)
+                EffectKind.EDGE_GLOW -> stylize(7, intensity, timeSec)
+                EffectKind.OIL_PAINT -> stylize(8, intensity, timeSec)
+                EffectKind.BLOOM -> stylize(9, intensity, timeSec)
+                EffectKind.NEON_GLOW -> stylize(10, intensity, timeSec)
 
-                EffectKind.SCRATCHES -> {
-                    glProgram.setIntUniform("uMode", 2)
-                    glProgram.setFloatUniform("uTimeSec", timeSec)
-                    glProgram.setFloatUniform("uIntensity", intensity)
-                }
+                EffectKind.RAIN -> atmosphere(0, intensity, timeSec)
+                EffectKind.SNOW -> atmosphere(1, intensity, timeSec)
+                EffectKind.FOG -> atmosphere(2, intensity, timeSec)
+                EffectKind.ZOOM_PULSE -> atmosphere(3, intensity, timeSec)
+                EffectKind.SPIN_BLUR -> atmosphere(4, intensity, timeSec)
+                EffectKind.GOD_RAYS -> atmosphere(5, intensity, timeSec)
             }
+        }
+
+        private fun distortion(mode: Int, intensity: Float, timeSec: Float) {
+            glProgram.setIntUniform("uMode", mode)
+            glProgram.setFloatUniform("uIntensity", intensity)
+            glProgram.setFloatUniform("uTimeSec", timeSec)
+            glProgram.setFloatUniform("uAspect", aspectUniform())
+        }
+
+        private fun oldFilm(mode: Int, intensity: Float, timeSec: Float) {
+            glProgram.setIntUniform("uMode", mode)
+            glProgram.setFloatUniform("uTimeSec", timeSec)
+            glProgram.setFloatUniform("uIntensity", intensity)
+        }
+
+        private fun stylize(mode: Int, intensity: Float, timeSec: Float) {
+            glProgram.setIntUniform("uMode", mode)
+            glProgram.setFloatUniform("uIntensity", intensity)
+            glProgram.setFloatUniform("uTimeSec", timeSec)
+            glProgram.setFloatsUniform("uTexelSize", texelSizeUniform())
+        }
+
+        private fun atmosphere(mode: Int, intensity: Float, timeSec: Float) {
+            glProgram.setIntUniform("uMode", mode)
+            glProgram.setFloatUniform("uIntensity", intensity)
+            glProgram.setFloatUniform("uTimeSec", timeSec)
+            glProgram.setFloatUniform("uAspect", aspectUniform())
+            glProgram.setFloatsUniform("uTexelSize", texelSizeUniform())
         }
     }
 
@@ -168,7 +179,7 @@ class FxEffect(
         fun shaderFor(kind: EffectKind): String = when (kind) {
             EffectKind.GLITCH -> ShaderPaths.FRAGMENT_FX_GLITCH
             EffectKind.VHS -> ShaderPaths.FRAGMENT_FX_VHS
-            EffectKind.RGB_SPLIT -> ShaderPaths.FRAGMENT_FX_RGB_SPLIT
+            EffectKind.RGB_SPLIT, EffectKind.CHROMATIC -> ShaderPaths.FRAGMENT_FX_RGB_SPLIT
             EffectKind.SHAKE -> ShaderPaths.FRAGMENT_FX_SHAKE
             EffectKind.FLASH -> ShaderPaths.FRAGMENT_FX_FLASH
             EffectKind.BLUR, EffectKind.MOTION_BLUR, EffectKind.CINEMATIC_BLUR ->
@@ -177,9 +188,17 @@ class FxEffect(
                 ShaderPaths.FRAGMENT_FX_OLD_FILM
             EffectKind.LENS_FLARE -> ShaderPaths.FRAGMENT_FX_LENS_FLARE
             EffectKind.LIGHT_LEAK, EffectKind.FILM_BURN -> ShaderPaths.FRAGMENT_FX_LIGHT_LEAK
-            EffectKind.WAVE, EffectKind.RIPPLE, EffectKind.WARP, EffectKind.FISHEYE ->
-                ShaderPaths.FRAGMENT_FX_DISTORTION
+            EffectKind.WAVE, EffectKind.RIPPLE, EffectKind.WARP, EffectKind.FISHEYE,
+            EffectKind.MIRROR, EffectKind.KALEIDOSCOPE,
+            -> ShaderPaths.FRAGMENT_FX_DISTORTION
             EffectKind.CRT -> ShaderPaths.FRAGMENT_FX_CRT
+            EffectKind.PIXELATE, EffectKind.POSTERIZE, EffectKind.HALFTONE, EffectKind.DUOTONE,
+            EffectKind.INVERT, EffectKind.THERMAL, EffectKind.NIGHT_VISION, EffectKind.EDGE_GLOW,
+            EffectKind.OIL_PAINT, EffectKind.BLOOM, EffectKind.NEON_GLOW,
+            -> ShaderPaths.FRAGMENT_FX_STYLIZE
+            EffectKind.RAIN, EffectKind.SNOW, EffectKind.FOG, EffectKind.ZOOM_PULSE,
+            EffectKind.SPIN_BLUR, EffectKind.GOD_RAYS,
+            -> ShaderPaths.FRAGMENT_FX_ATMOSPHERE
         }
     }
 }

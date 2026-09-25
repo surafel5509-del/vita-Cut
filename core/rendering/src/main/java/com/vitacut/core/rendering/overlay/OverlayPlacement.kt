@@ -54,6 +54,7 @@ data class OverlayPlacement(
             scaleOverride: Float? = null,
             translationOverrideX: Float? = null,
             translationOverrideY: Float? = null,
+            rotationOverride: Float? = null,
             blendMode: BlendMode = BlendMode.NORMAL,
         ): OverlayPlacement {
             val scale = scaleOverride ?: 1f
@@ -62,7 +63,7 @@ data class OverlayPlacement(
                 centerY = translationOverrideY ?: transform.translationY,
                 halfWidth = bitmapWidth.toFloat() / (2f * canvasWidth) * transform.scaleX * scale,
                 halfHeight = bitmapHeight.toFloat() / (2f * canvasHeight) * transform.scaleY * scale,
-                rotationDegrees = transform.rotationDegrees,
+                rotationDegrees = rotationOverride ?: transform.rotationDegrees,
                 opacity = opacityOverride ?: transform.opacity,
                 blendMode = blendMode,
             )

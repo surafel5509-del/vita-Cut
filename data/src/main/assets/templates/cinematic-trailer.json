@@ -1,0 +1,16 @@
+{
+  "id": "bundled-cinematic-trailer",
+  "nameKey": "template_cinematic_trailer",
+  "category": "CINEMATIC",
+  "canvas": { "aspectRatio": "RATIO_21_9", "customWidth": 2560, "customHeight": 1080 },
+  "frameRate": 24.0,
+  "slots": [
+    { "order": 0, "kind": "MEDIA", "durationUs": 2200000, "transitionOut": "CINEMATIC_BARS", "transitionDurationUs": 600000, "suggestedFilterId": "teal-orange" },
+    { "order": 1, "kind": "TEXT", "durationUs": 1800000, "textKey": "template_text_title_default" },
+    { "order": 2, "kind": "MEDIA", "durationUs": 2400000, "transitionOut": "IRIS", "transitionDurationUs": 500000, "suggestedFilterId": "anamorphic" },
+    { "order": 3, "kind": "MEDIA", "durationUs": 2400000, "transitionOut": "CROSS_ZOOM", "transitionDurationUs": 500000, "suggestedFilterId": "teal-orange" },
+    { "order": 4, "kind": "MEDIA", "durationUs": 2800000, "transitionOut": "DISSOLVE_TO_BLACK", "transitionDurationUs": 800000, "suggestedFilterId": "noir-soft" }
+  ],
+  "thumbnailKey": "template_cinematic_trailer",
+  "descriptionKey": "template_cinematic_trailer_desc"
+}

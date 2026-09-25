@@ -1,0 +1,17 @@
+{
+  "id": "bundled-birthday-reel",
+  "nameKey": "template_birthday_reel",
+  "category": "BIRTHDAY",
+  "canvas": { "aspectRatio": "RATIO_9_16", "customWidth": 1080, "customHeight": 1920 },
+  "frameRate": 30.0,
+  "slots": [
+    { "order": 0, "kind": "TEXT", "durationUs": 2000000, "textKey": "template_text_title_default" },
+    { "order": 1, "kind": "MEDIA", "durationUs": 1800000, "transitionOut": "HEARTBEAT", "transitionDurationUs": 400000, "suggestedFilterId": "golden-hour" },
+    { "order": 2, "kind": "MEDIA", "durationUs": 1800000, "transitionOut": "FLASH_IN", "transitionDurationUs": 300000, "suggestedFilterId": "candy" },
+    { "order": 3, "kind": "MEDIA", "durationUs": 1800000, "transitionOut": "ZOOM_IN", "transitionDurationUs": 300000, "suggestedFilterId": "golden-hour" },
+    { "order": 4, "kind": "MEDIA", "durationUs": 2200000, "suggestedFilterId": "honey" },
+    { "order": 5, "kind": "TEXT", "durationUs": 1800000, "textKey": "template_text_follow_default" }
+  ],
+  "thumbnailKey": "template_birthday_reel",
+  "descriptionKey": "template_birthday_reel_desc"
+}

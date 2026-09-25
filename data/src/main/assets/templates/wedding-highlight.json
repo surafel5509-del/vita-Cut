@@ -1,0 +1,17 @@
+{
+  "id": "bundled-wedding-highlight",
+  "nameKey": "template_wedding_highlight",
+  "category": "WEDDING",
+  "canvas": { "aspectRatio": "RATIO_16_9", "customWidth": 1920, "customHeight": 1080 },
+  "frameRate": 24.0,
+  "slots": [
+    { "order": 0, "kind": "MEDIA", "durationUs": 2500000, "transitionOut": "FADE", "transitionDurationUs": 700000, "suggestedFilterId": "porcelain" },
+    { "order": 1, "kind": "TEXT", "durationUs": 2200000, "textKey": "template_text_title_default" },
+    { "order": 2, "kind": "MEDIA", "durationUs": 2600000, "transitionOut": "SLIDE", "transitionDurationUs": 500000, "suggestedFilterId": "porcelain" },
+    { "order": 3, "kind": "MEDIA", "durationUs": 2600000, "transitionOut": "DISSOLVE_TO_WHITE", "transitionDurationUs": 600000, "suggestedFilterId": "kodak-portra" },
+    { "order": 4, "kind": "MEDIA", "durationUs": 2800000, "transitionOut": "FADE", "transitionDurationUs": 800000, "suggestedFilterId": "kodak-portra" },
+    { "order": 5, "kind": "MEDIA", "durationUs": 3200000, "suggestedFilterId": "dream-haze" }
+  ],
+  "thumbnailKey": "template_wedding_highlight",
+  "descriptionKey": "template_wedding_highlight_desc"
+}

@@ -1,0 +1,17 @@
+{
+  "id": "bundled-lyric-video",
+  "nameKey": "template_lyric_video",
+  "category": "YOUTUBE_SHORTS",
+  "canvas": { "aspectRatio": "RATIO_9_16", "customWidth": 1080, "customHeight": 1920 },
+  "frameRate": 30.0,
+  "slots": [
+    { "order": 0, "kind": "MEDIA", "durationUs": 2000000, "transitionOut": "GLITCH_IN", "transitionDurationUs": 220000, "suggestedFilterId": "vhs-night" },
+    { "order": 1, "kind": "TEXT", "durationUs": 2000000, "textKey": "template_text_title_default" },
+    { "order": 2, "kind": "MEDIA", "durationUs": 1800000, "transitionOut": "PIXELATE_OUT", "transitionDurationUs": 280000, "suggestedFilterId": "arcade" },
+    { "order": 3, "kind": "TEXT", "durationUs": 1800000, "textKey": "template_text_follow_default" },
+    { "order": 4, "kind": "MEDIA", "durationUs": 2000000, "transitionOut": "SWIRL", "transitionDurationUs": 350000, "suggestedFilterId": "neon-tokyo" },
+    { "order": 5, "kind": "MEDIA", "durationUs": 2200000, "suggestedFilterId": "vhs-night" }
+  ],
+  "thumbnailKey": "template_lyric_video",
+  "descriptionKey": "template_lyric_video_desc"
+}

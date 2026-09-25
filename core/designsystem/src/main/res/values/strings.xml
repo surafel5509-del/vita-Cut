@@ -6,6 +6,7 @@
     <!-- Brand -->
     <string name="app_name">Vita Cut</string>
     <string name="app_tagline">Create. Edit. Inspire.</string>
+    <string name="app_edition">Ultimate Studio</string>
 
     <!-- Common -->
     <string name="action_cancel">Cancel</string>
@@ -101,6 +102,32 @@
     <string name="tool_sticker">Sticker</string>
     <string name="tool_overlay">Overlay</string>
     <string name="tool_pip">Picture in picture</string>
+    <string name="tool_overlay_hint">Add a picture-in-picture or overlay clip. Use Transform to move, scale and blend it.</string>
+    <string name="tool_position_x">Position X</string>
+    <string name="tool_position_y">Position Y</string>
+    <string name="tool_scale">Scale</string>
+    <string name="tool_rotation">Rotation</string>
+    <string name="tool_rotate_90">Rotate 90°</string>
+    <string name="tool_flip_h">Flip H</string>
+    <string name="tool_flip_v">Flip V</string>
+    <string name="tool_fit">Fit</string>
+    <string name="tool_crop">Crop</string>
+    <string name="tool_feather">Feather</string>
+    <string name="tool_invert">Invert</string>
+    <string name="tool_spill">Spill</string>
+    <string name="tool_chroma_green">Green</string>
+    <string name="tool_chroma_blue">Blue</string>
+    <string name="tool_chroma_red">Red</string>
+    <string name="tool_paste_look">Paste look</string>
+    <string name="tool_text_presets">Text styles</string>
+    <string name="tool_audio_fx">Audio effects</string>
+    <string name="tool_bass">Bass</string>
+    <string name="tool_treble">Treble</string>
+    <string name="tool_reverb">Reverb</string>
+    <string name="tool_echo">Echo</string>
+    <string name="tool_noise_reduction">Noise reduction</string>
+    <string name="tool_voice_enhance">Voice enhance</string>
+    <string name="tool_normalize">Normalize</string>
 
     <string name="tool_transition">Transition</string>
     <string name="tool_transition_none">None</string>
@@ -247,7 +274,7 @@
     <string name="settings_about">About</string>
     <string name="settings_privacy">Privacy</string>
     <string name="settings_privacy_summary">All editing happens on your device. Vita Cut has no accounts, no analytics and never uploads your media.</string>
-    <string name="settings_version">Version %1$s</string>
+    <string name="settings_version">Version %1$s · Ultimate Studio</string>
     <string name="settings_export_defaults">Default export settings</string>
 
     <!-- Templates -->
@@ -264,6 +291,31 @@
     <string name="template_beat_drop_desc">Fast glitch-cut short built for music — 9:16.</string>
     <string name="template_text_title_default">Your title here</string>
     <string name="template_text_follow_default">Follow for more</string>
+    <string name="template_tiktok_hook">Hook in 3</string>
+    <string name="template_tiktok_hook_desc">Cold-open hook, three punchy clips and a follow card — 9:16.</string>
+    <string name="template_youtube_intro">Channel intro</string>
+    <string name="template_youtube_intro_desc">Cinematic 16:9 opener with title, logo beat and fade-to-program.</string>
+    <string name="template_birthday_reel">Birthday reel</string>
+    <string name="template_birthday_reel_desc">Celebratory 9:16 montage with pop titles and warm grade.</string>
+    <string name="template_wedding_highlight">Wedding highlight</string>
+    <string name="template_wedding_highlight_desc">Soft 16:9 vows montage with slides and porcelain skin.</string>
+    <string name="template_sports_highlight">Sports highlight</string>
+    <string name="template_sports_highlight_desc">High-energy 9:16 cuts with whip pans and impact titles.</string>
+    <string name="template_cinematic_trailer">Cinematic trailer</string>
+    <string name="template_cinematic_trailer_desc">Letterboxed 21:9 teaser with iris, bars and teal-orange.</string>
+    <string name="template_vlog_opener">Vlog opener</string>
+    <string name="template_vlog_opener_desc">Talking-head 16:9 opener with lower-third and jump cuts.</string>
+    <string name="template_business_promo">Brand promo</string>
+    <string name="template_business_promo_desc">Clean 1:1 product promo with lower-thirds and fades.</string>
+    <string name="template_food_reel">Food reel</string>
+    <string name="template_food_reel_desc">Appetite-grade 9:16 close-ups with zooms and a title sting.</string>
+    <string name="template_product_unbox">Unbox &amp; reveal</string>
+    <string name="template_product_unbox_desc">Product reveal 4:5 with flash cuts and a CTA card.</string>
+    <string name="template_day_in_life">Day in the life</string>
+    <string name="template_day_in_life_desc">Story-style 9:16 sequence with travel grades and captions.</string>
+    <string name="template_lyric_video">Lyric video</string>
+    <string name="template_lyric_video_desc">Beat-synced 9:16 lyric layout with glitch cuts and neon type.</string>
+    <string name="templates_category_all">All</string>
 
     <!-- Errors (shared) -->
     <string name="error_unknown">Something went wrong. Please try again.</string>

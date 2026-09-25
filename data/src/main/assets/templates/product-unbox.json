@@ -1,0 +1,15 @@
+{
+  "id": "bundled-product-unbox",
+  "nameKey": "template_product_unbox",
+  "category": "BUSINESS",
+  "canvas": { "aspectRatio": "RATIO_4_5", "customWidth": 1080, "customHeight": 1350 },
+  "frameRate": 30.0,
+  "slots": [
+    { "order": 0, "kind": "MEDIA", "durationUs": 1800000, "transitionOut": "FLASH_IN", "transitionDurationUs": 250000, "suggestedFilterId": "clean-feed" },
+    { "order": 1, "kind": "MEDIA", "durationUs": 1800000, "transitionOut": "ZOOM_IN", "transitionDurationUs": 300000, "suggestedFilterId": "igtv-clean" },
+    { "order": 2, "kind": "MEDIA", "durationUs": 2000000, "transitionOut": "FADE", "transitionDurationUs": 400000, "suggestedFilterId": "clean-feed" },
+    { "order": 3, "kind": "TEXT", "durationUs": 2000000, "textKey": "template_text_follow_default" }
+  ],
+  "thumbnailKey": "template_product_unbox",
+  "descriptionKey": "template_product_unbox_desc"
+}

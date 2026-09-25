@@ -9,6 +9,10 @@ enum class EffectCategory {
     CINEMATIC,
     DISTORTION,
     RETRO,
+    LIGHT,
+    STYLIZE,
+    MOTION,
+    NATURE,
 }
 
 /**
@@ -39,12 +43,40 @@ enum class EffectKind(val category: EffectCategory) {
     RIPPLE(EffectCategory.DISTORTION),
     WARP(EffectCategory.DISTORTION),
     FISHEYE(EffectCategory.DISTORTION),
+    MIRROR(EffectCategory.DISTORTION),
+    KALEIDOSCOPE(EffectCategory.DISTORTION),
 
     // Retro
     CRT(EffectCategory.RETRO),
     OLD_FILM(EffectCategory.RETRO),
     DUST(EffectCategory.RETRO),
     SCRATCHES(EffectCategory.RETRO),
+
+    // Light
+    BLOOM(EffectCategory.LIGHT),
+    NEON_GLOW(EffectCategory.LIGHT),
+    CHROMATIC(EffectCategory.LIGHT),
+    GOD_RAYS(EffectCategory.LIGHT),
+
+    // Stylize
+    PIXELATE(EffectCategory.STYLIZE),
+    POSTERIZE(EffectCategory.STYLIZE),
+    HALFTONE(EffectCategory.STYLIZE),
+    DUOTONE(EffectCategory.STYLIZE),
+    INVERT(EffectCategory.STYLIZE),
+    THERMAL(EffectCategory.STYLIZE),
+    NIGHT_VISION(EffectCategory.STYLIZE),
+    EDGE_GLOW(EffectCategory.STYLIZE),
+    OIL_PAINT(EffectCategory.STYLIZE),
+
+    // Motion
+    ZOOM_PULSE(EffectCategory.MOTION),
+    SPIN_BLUR(EffectCategory.MOTION),
+
+    // Nature
+    RAIN(EffectCategory.NATURE),
+    SNOW(EffectCategory.NATURE),
+    FOG(EffectCategory.NATURE),
 }
 
 /**

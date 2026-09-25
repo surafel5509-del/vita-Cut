@@ -1,6 +1,8 @@
 package com.vitacut.core.timeline
 
 import com.vitacut.core.model.AssetId
+import com.vitacut.core.model.AudioEffects
+import com.vitacut.core.model.BlendMode
 import com.vitacut.core.model.ItemId
 import com.vitacut.core.model.MediaAsset
 import com.vitacut.core.model.MediaKind
@@ -255,5 +257,54 @@ class TimelineEngineTest {
         val reordered = TimelineEngine.reorderTrack(project, textTrack.id, 0)
         assertEquals(TrackKind.TEXT, reordered.tracks[0].kind)
         assertEquals(listOf(0, 1, 2), reordered.tracks.map { it.order })
+    }
+
+    @Test
+    fun `insertOverlayClip places a pip clip on an overlay track`() {
+        val base = videoAsset()
+        val overlayAsset = videoAsset(4_000_000L)
+        var project = projectWith(base)
+        project = TimelineEngine.addAssets(project, listOf(overlayAsset))
+        project = TimelineEngine.insertOverlayClip(project, overlayAsset, atUs = 1_000_000L)
+        val overlayTrack = project.tracks.first { it.kind == TrackKind.OVERLAY }
+        val pip = overlayTrack.items.filterIsInstance<VideoClipItem>().single()
+        assertEquals(1_000_000L, pip.timelineStartUs)
+        assertTrue(pip.transform.scaleX < 1f)
+        assertEquals(overlayAsset.id, pip.assetId)
+    }
+
+    @Test
+    fun `rotate and blend updates persist on the clip`() {
+        val project = projectWith(videoAsset())
+        val clip = project.videoClips().single()
+        val rotated = TimelineEngine.rotateItem(project, clip.id, 90f)
+        assertEquals(90f, (rotated.item(clip.id) as VideoClipItem).transform.rotationDegrees, 0.01f)
+        val blended = TimelineEngine.setBlendMode(rotated, clip.id, BlendMode.SCREEN)
+        assertEquals(BlendMode.SCREEN, (blended.item(clip.id) as VideoClipItem).blendMode)
+    }
+
+    @Test
+    fun `audio effects attach to audio clips`() {
+        val asset = MediaAsset(
+            uri = "content://media/audio/1",
+            kind = MediaKind.AUDIO,
+            durationUs = 5_000_000L,
+        )
+        var project = Project.create(name = "Audio", nowMs = 0L)
+        project = TimelineEngine.addAssets(project, listOf(asset))
+        val item = com.vitacut.core.model.AudioClipItem(
+            assetId = asset.id,
+            sourceOutUs = 5_000_000L,
+            durationUs = 5_000_000L,
+        )
+        project = TimelineEngine.insertItem(project, null, TrackKind.AUDIO, item)
+        val updated = TimelineEngine.setAudioEffects(
+            project,
+            item.id,
+            AudioEffects(bass = 0.4f, reverb = 0.5f, voiceEnhance = true),
+        )
+        val audio = updated.audioClips().single()
+        assertEquals(0.4f, audio.audioEffects.bass, 0.001f)
+        assertTrue(audio.audioEffects.voiceEnhance)
     }
 }

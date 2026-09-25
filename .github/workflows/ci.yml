@@ -10,9 +10,16 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: debug-apk-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build-debug-apk:
+    name: Build, test, and verify debug APK
     runs-on: ubuntu-latest
+    timeout-minutes: 60
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -38,58 +45,89 @@ jobs:
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
-        with:
-          packages: | 
-             - platform-tools
-             - platforms;android-34
-             - build-tools;34.0.0
-      
-      - name: Set up Gradle 9.1.1
+
+      - name: Install Android SDK packages
+        run: |
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager --install \
+            "platform-tools" \
+            "platforms;android-35" \
+            "build-tools;35.0.0"
+
+      - name: Set up Gradle (wrapper)
         uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: "9.1.1"
+          cache-read-only: false
 
       - name: Fix gradlew permissions and line endings
         run: |
           sed -i 's/\r$//' ./gradlew
           chmod +x ./gradlew
+          test -f gradle/wrapper/gradle-wrapper.jar
+          grep -q "gradle-8.9" gradle/wrapper/gradle-wrapper.properties
 
-      - name: Create temporary debug keystore
-        run: |
-          if [ -f "./debug.keystore" ]; then
-            echo "debug.keystore already exists"
-          else
-            echo "Generating debug.keystore..."
-            keytool -genkey -v \
-              -keystore ./debug.keystore \
-              -storepass android \
-              -alias androiddebugkey \
-              -keypass android \
-              -dname "CN=Android Debug,O=Android,C=US" \
-              -keyalg RSA \
-              -keysize 2048 \
-              -validity 10000
-          fi
-          if [ ! -f "./debug.keystore" ]; then
-            echo "Error: debug.keystore could not be created"
-            exit 1
-          fi
-          echo "debug.keystore is ready"
+      - name: Run unit tests
+        run: ./gradlew test --stacktrace --no-daemon --continue
 
       - name: Build debug APK
         run: ./gradlew :app:assembleDebug --stacktrace --no-daemon
 
-      - name: Verify APK exists
+      - name: Verify APK exists and is complete
         run: |
+          set -euo pipefail
           APK_PATH="app/build/outputs/apk/debug/app-debug.apk"
-          if [ -f "$APK_PATH" ]; then
-            echo "APK found at $APK_PATH"
-          else
+          if [ ! -f "$APK_PATH" ]; then
             echo "Error: APK not found at $APK_PATH"
             echo "Searching for APK files in app/build/outputs/apk..."
-            find app/build/outputs/apk -name "*.apk" -type f
+            find app/build/outputs/apk -name "*.apk" -type f || true
             exit 1
           fi
+
+          SIZE=$(stat -c%s "$APK_PATH")
+          echo "APK found at $APK_PATH ($SIZE bytes)"
+          if [ "$SIZE" -lt 1000000 ]; then
+            echo "Error: APK is suspiciously small ($SIZE bytes)"
+            exit 1
+          fi
+
+          echo "=== ZIP integrity ==="
+          python3 - <<'PY'
+          import sys, zipfile
+          path = "app/build/outputs/apk/debug/app-debug.apk"
+          with zipfile.ZipFile(path) as z:
+              bad = z.testzip()
+              if bad:
+                  print(f"Corrupt zip entry: {bad}")
+                  sys.exit(1)
+              names = z.namelist()
+              print(f"entries={len(names)}")
+              dex = [n for n in names if n.startswith("classes") and n.endswith(".dex")]
+              if not dex:
+                  print("Error: no classes*.dex in APK")
+                  sys.exit(1)
+              if "AndroidManifest.xml" not in names:
+                  print("Error: AndroidManifest.xml missing")
+                  sys.exit(1)
+              print("dex:", ", ".join(dex))
+              print("manifest: AndroidManifest.xml")
+          PY
+
+          echo "=== aapt dump badging ==="
+          export ANDROID_HOME="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-$HOME/Android/Sdk}}"
+          AAPT=$(ls -1 "$ANDROID_HOME"/build-tools/*/aapt 2>/dev/null | tail -1)
+          if [ -z "$AAPT" ]; then
+            echo "Error: aapt not found under $ANDROID_HOME/build-tools"
+            ls -la "$ANDROID_HOME/build-tools" || true
+            exit 1
+          fi
+          BADGING=$("$AAPT" dump badging "$APK_PATH")
+          echo "$BADGING" | head -20
+          echo "$BADGING" | grep -q "package: name='com.vitacut.debug'"
+          echo "$BADGING" | grep -q "application-label:'Vita Cut'"
+          echo "$BADGING" | grep -E "sdkVersion:'26'|minSdkVersion:'26'"
+          echo "$BADGING" | grep -E "targetSdkVersion:'35'"
+          echo "$BADGING" | grep -q "launchable-activity"
+          echo "APK verification passed"
 
       - name: Upload debug APK
         uses: actions/upload-artifact@v4
@@ -97,3 +135,4 @@ jobs:
           name: vitacut-debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
+          retention-days: 14

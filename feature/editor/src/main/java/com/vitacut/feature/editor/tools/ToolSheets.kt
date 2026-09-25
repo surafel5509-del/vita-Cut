@@ -34,15 +34,21 @@ import com.vitacut.core.designsystem.components.VitaChipRow
 import com.vitacut.core.designsystem.components.VitaLabeledSlider
 import com.vitacut.core.designsystem.components.VitaOutlinedButton
 import com.vitacut.core.model.AudioClipItem
+import com.vitacut.core.model.Project
 import com.vitacut.core.model.SpeedCurvePreset
 import com.vitacut.core.model.SpeedModel
 import com.vitacut.core.model.StickerSource
 import com.vitacut.core.model.TextItem
+import com.vitacut.core.model.TextStyleLibrary
 import com.vitacut.core.model.VideoClipItem
 import com.vitacut.core.rendering.overlay.BuiltInStickers
 import com.vitacut.feature.editor.EditorSheet
 import com.vitacut.feature.editor.EditorViewModel
 import java.io.File
+
+private fun catalogLabel(id: String): String =
+    id.replace('_', ' ').replace('-', ' ').split(' ')
+        .joinToString(" ") { part -> part.replaceFirstChar { c -> c.uppercase() } }
 
 /** Routes the active [EditorSheet] to its panel inside a modal bottom sheet. */
 @OptIn(ExperimentalMaterial3Api::class)
@@ -81,6 +87,10 @@ fun ToolSheetHost(
                 EditorSheet.CAPTIONS -> CaptionsSheet(viewModel, project)
                 EditorSheet.AI -> AiSheet(viewModel, project)
                 EditorSheet.KEYFRAME -> KeyframeSheet(viewModel)
+                EditorSheet.TRANSFORM -> TransformSheet(viewModel)
+                EditorSheet.MASK -> MaskSheet(viewModel)
+                EditorSheet.CHROMA -> ChromaSheet(viewModel)
+                EditorSheet.OVERLAY -> OverlaySheet(viewModel)
             }
         }
     }
@@ -176,6 +186,8 @@ internal fun ClipSheet(viewModel: EditorViewModel) {
                 VitaChipItem("reverse", stringResource(R.string.tool_reverse), item.reversed),
                 VitaChipItem("freeze", stringResource(R.string.tool_freeze_frame), false),
                 VitaChipItem("detach", stringResource(R.string.tool_detach_audio), false),
+                VitaChipItem("paste", stringResource(R.string.tool_paste_look), false),
+                VitaChipItem("rot90", stringResource(R.string.tool_rotate_90), false),
             )
         } else emptyList(),
         onChipClick = { id ->
@@ -186,6 +198,8 @@ internal fun ClipSheet(viewModel: EditorViewModel) {
                 "reverse" -> viewModel.reverseSelectedClip()
                 "freeze" -> viewModel.freezeFrame()
                 "detach" -> viewModel.detachAudio()
+                "paste" -> viewModel.pasteAttributesFromPrevious()
+                "rot90" -> viewModel.rotateSelected(90f)
             }
         },
     )
@@ -289,6 +303,66 @@ internal fun AudioSheet(viewModel: EditorViewModel) {
         valueRange = 0f..5f,
         valueText = String.format("%.1fs", fadeOut / 1_000_000f),
     )
+    if (item is AudioClipItem) {
+        val fx = item.audioEffects
+        Text(
+            stringResource(R.string.tool_audio_fx),
+            style = MaterialTheme.typography.labelMedium,
+            modifier = Modifier.padding(start = 20.dp, top = 12.dp),
+        )
+        VitaLabeledSlider(
+            label = stringResource(R.string.tool_bass),
+            value = fx.bass,
+            onValueChange = { viewModel.setAudioEffects(fx.copy(bass = it)) },
+            modifier = Modifier.padding(horizontal = 20.dp),
+            valueRange = -1f..1f,
+            valueText = String.format("%+.2f", fx.bass),
+        )
+        VitaLabeledSlider(
+            label = stringResource(R.string.tool_treble),
+            value = fx.treble,
+            onValueChange = { viewModel.setAudioEffects(fx.copy(treble = it)) },
+            modifier = Modifier.padding(horizontal = 20.dp),
+            valueRange = -1f..1f,
+            valueText = String.format("%+.2f", fx.treble),
+        )
+        VitaLabeledSlider(
+            label = stringResource(R.string.tool_reverb),
+            value = fx.reverb,
+            onValueChange = { viewModel.setAudioEffects(fx.copy(reverb = it)) },
+            modifier = Modifier.padding(horizontal = 20.dp),
+            valueRange = 0f..1f,
+            valueText = "${(fx.reverb * 100).toInt()}%",
+        )
+        VitaLabeledSlider(
+            label = stringResource(R.string.tool_echo),
+            value = fx.echo,
+            onValueChange = { viewModel.setAudioEffects(fx.copy(echo = it)) },
+            modifier = Modifier.padding(horizontal = 20.dp),
+            valueRange = 0f..1f,
+            valueText = "${(fx.echo * 100).toInt()}%",
+        )
+        VitaLabeledSlider(
+            label = stringResource(R.string.tool_noise_reduction),
+            value = fx.noiseReduction,
+            onValueChange = { viewModel.setAudioEffects(fx.copy(noiseReduction = it)) },
+            modifier = Modifier.padding(horizontal = 20.dp),
+            valueRange = 0f..1f,
+            valueText = "${(fx.noiseReduction * 100).toInt()}%",
+        )
+        VitaChipRow(
+            chips = listOf(
+                VitaChipItem("voice", stringResource(R.string.tool_voice_enhance), fx.voiceEnhance),
+                VitaChipItem("norm", stringResource(R.string.tool_normalize), fx.normalize),
+            ),
+            onChipClick = { id ->
+                when (id) {
+                    "voice" -> viewModel.setAudioEffects(fx.copy(voiceEnhance = !fx.voiceEnhance))
+                    "norm" -> viewModel.setAudioEffects(fx.copy(normalize = !fx.normalize))
+                }
+            },
+        )
+    }
 }
 
 // endregion
@@ -325,9 +399,20 @@ internal fun TextSheet(viewModel: EditorViewModel) {
     }
     if (item != null) {
         Text(
-            stringResource(R.string.tool_text_style),
+            stringResource(R.string.tool_text_presets),
             style = MaterialTheme.typography.labelMedium,
             modifier = Modifier.padding(start = 20.dp),
+        )
+        VitaChipRow(
+            chips = TextStyleLibrary.ALL.map { preset ->
+                VitaChipItem(preset.id, catalogLabel(preset.id), item.style == preset.style)
+            },
+            onChipClick = viewModel::applyTextPreset,
+        )
+        Text(
+            stringResource(R.string.tool_text_style),
+            style = MaterialTheme.typography.labelMedium,
+            modifier = Modifier.padding(start = 20.dp, top = 8.dp),
         )
         VitaLabeledSlider(
             label = stringResource(R.string.tool_text_style),
@@ -379,13 +464,48 @@ internal fun TextSheet(viewModel: EditorViewModel) {
                 )
             },
         )
+        VitaChipRow(
+            chips = com.vitacut.core.model.TextAnimationOut.entries.map { anim ->
+                VitaChipItem("out_${anim.name}", "out ${anim.name.lowercase()}", item.animations.outAnimation == anim)
+            },
+            onChipClick = { id ->
+                viewModel.setSelectedTextAnimation(
+                    outAnim = com.vitacut.core.model.TextAnimationOut.valueOf(id.removePrefix("out_")),
+                )
+            },
+        )
+        VitaChipRow(
+            chips = listOf("default", "serif", "monospace").map { key ->
+                VitaChipItem(key, catalogLabel(key), item.style.fontFamilyKey == key)
+            },
+            onChipClick = { key ->
+                viewModel.setSelectedTextStyle { it.copy(fontFamilyKey = key) }
+            },
+        )
+        VitaChipRow(
+            chips = listOf(
+                VitaChipItem("bold", "B", item.style.bold),
+                VitaChipItem("italic", "I", item.style.italic),
+                VitaChipItem("underline", "U", item.style.underline),
+            ),
+            onChipClick = { id ->
+                viewModel.setSelectedTextStyle { style ->
+                    when (id) {
+                        "bold" -> style.copy(bold = !style.bold)
+                        "italic" -> style.copy(italic = !style.italic)
+                        else -> style.copy(underline = !style.underline)
+                    }
+                }
+            },
+        )
     }
 }
 
 private val EMOJI_CHOICES = listOf(
-    "😀", "😂", "❤️", "🔥", "⭐", "👍", "🎉", "🎵",
-    "🎬", "📸", "🌈", "☀️", "🌙", "⚡", "💯", "👀",
-    "🥳", "🍿", "☕", "🚀",
+    "😀", "😂", "😍", "🤩", "😎", "🥳", "😭", "🤯",
+    "❤️", "🔥", "⭐", "✨", "💯", "👍", "👏", "🙌",
+    "🎉", "🎵", "🎬", "📸", "🌈", "☀️", "🌙", "⚡",
+    "👀", "🍿", "☕", "🚀", "💎", "🏆", "🌸", "🦋",
 )
 
 @Composable

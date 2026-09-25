@@ -16,6 +16,7 @@ enum class TransitionCategory {
     LIGHT,
     THREE_D,
     CINEMATIC,
+    CREATIVE,
 }
 
 /** Direction where the transition supports one (slides, wipes). */
@@ -79,6 +80,18 @@ enum class TransitionKind(val category: TransitionCategory, val supportsDirectio
     // Cinematic
     WIPE(TransitionCategory.CINEMATIC, supportsDirection = true),
     CINEMATIC_BARS(TransitionCategory.CINEMATIC),
+
+    // Creative (Ultimate)
+    CROSS_ZOOM(TransitionCategory.CREATIVE),
+    SWIRL(TransitionCategory.CREATIVE),
+    PIXELATE_OUT(TransitionCategory.CREATIVE),
+    IRIS(TransitionCategory.CREATIVE),
+    CLOCK_WIPE(TransitionCategory.CREATIVE),
+    WHIP_PAN(TransitionCategory.CREATIVE, supportsDirection = true),
+    HEARTBEAT(TransitionCategory.CREATIVE),
+    CIRCLE_OPEN(TransitionCategory.CREATIVE),
+    DIAGONAL_WIPE(TransitionCategory.CREATIVE, supportsDirection = true),
+    FADE_COLOR(TransitionCategory.CREATIVE),
 }
 
 /**

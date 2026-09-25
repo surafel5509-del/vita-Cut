@@ -1,0 +1,17 @@
+{
+  "id": "bundled-tiktok-hook",
+  "nameKey": "template_tiktok_hook",
+  "category": "TIKTOK",
+  "canvas": { "aspectRatio": "RATIO_9_16", "customWidth": 1080, "customHeight": 1920 },
+  "frameRate": 30.0,
+  "slots": [
+    { "order": 0, "kind": "TEXT", "durationUs": 1200000, "textKey": "template_text_title_default" },
+    { "order": 1, "kind": "MEDIA", "durationUs": 1600000, "transitionOut": "FLASH_IN", "transitionDurationUs": 250000, "suggestedFilterId": "creator-pop" },
+    { "order": 2, "kind": "MEDIA", "durationUs": 1600000, "transitionOut": "ZOOM_IN", "transitionDurationUs": 280000, "suggestedFilterId": "creator-pop" },
+    { "order": 3, "kind": "MEDIA", "durationUs": 1800000, "transitionOut": "GLITCH_IN", "transitionDurationUs": 220000, "suggestedFilterId": "story-pop" },
+    { "order": 4, "kind": "MEDIA", "durationUs": 2000000, "suggestedFilterId": "story-pop" },
+    { "order": 5, "kind": "TEXT", "durationUs": 1800000, "textKey": "template_text_follow_default" }
+  ],
+  "thumbnailKey": "template_tiktok_hook",
+  "descriptionKey": "template_tiktok_hook_desc"
+}

@@ -1,0 +1,16 @@
+{
+  "id": "bundled-food-reel",
+  "nameKey": "template_food_reel",
+  "category": "REELS",
+  "canvas": { "aspectRatio": "RATIO_9_16", "customWidth": 1080, "customHeight": 1920 },
+  "frameRate": 30.0,
+  "slots": [
+    { "order": 0, "kind": "MEDIA", "durationUs": 1600000, "transitionOut": "ZOOM_IN", "transitionDurationUs": 300000, "suggestedFilterId": "appetite" },
+    { "order": 1, "kind": "MEDIA", "durationUs": 1600000, "transitionOut": "FLASH_IN", "transitionDurationUs": 220000, "suggestedFilterId": "juicy" },
+    { "order": 2, "kind": "MEDIA", "durationUs": 1600000, "transitionOut": "ZOOM_IN", "transitionDurationUs": 300000, "suggestedFilterId": "appetite" },
+    { "order": 3, "kind": "MEDIA", "durationUs": 2000000, "suggestedFilterId": "cafe-light" },
+    { "order": 4, "kind": "TEXT", "durationUs": 1800000, "textKey": "template_text_title_default" }
+  ],
+  "thumbnailKey": "template_food_reel",
+  "descriptionKey": "template_food_reel_desc"
+}

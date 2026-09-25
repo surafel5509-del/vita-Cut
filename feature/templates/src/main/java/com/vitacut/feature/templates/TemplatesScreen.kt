@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.weight
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -40,11 +41,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.vitacut.core.common.time.formatDuration
 import com.vitacut.core.designsystem.R
 import com.vitacut.core.designsystem.components.VitaButton
+import com.vitacut.core.designsystem.components.VitaChipItem
+import com.vitacut.core.designsystem.components.VitaChipRow
 import com.vitacut.core.designsystem.components.VitaDialog
 import com.vitacut.core.designsystem.components.VitaEmptyState
 import com.vitacut.core.designsystem.components.VitaLoading
 import com.vitacut.core.designsystem.components.VitaTopBar
 import com.vitacut.core.designsystem.strings.VitaStrings
+import com.vitacut.core.model.TemplateCategory
 import com.vitacut.domain.repository.TemplateMeta
 
 /** Template gallery: bundled + user templates, favorite/delete, and "use" → new project. */
@@ -79,9 +83,27 @@ fun TemplatesScreen(
                 modifier = Modifier.padding(padding),
             )
 
-            else -> LazyVerticalGrid(
+            else -> Column(modifier = Modifier.fillMaxSize().padding(padding)) {
+                VitaChipRow(
+                    chips = buildList {
+                        add(VitaChipItem("all", stringResource(R.string.templates_category_all), state.category == null))
+                        TemplateCategory.entries.forEach { category ->
+                            add(
+                                VitaChipItem(
+                                    category.name,
+                                    category.name.lowercase().replace('_', ' '),
+                                    state.category == category.name,
+                                ),
+                            )
+                        }
+                    },
+                    onChipClick = { id ->
+                        viewModel.setCategory(id.takeIf { it != "all" })
+                    },
+                )
+            LazyVerticalGrid(
                 columns = GridCells.Adaptive(minSize = 160.dp),
-                modifier = Modifier.fillMaxSize().padding(padding),
+                modifier = Modifier.weight(1f).fillMaxSize(),
                 contentPadding = PaddingValues(16.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -98,6 +120,7 @@ fun TemplatesScreen(
                         } else null,
                     )
                 }
+            }
             }
         }
     }

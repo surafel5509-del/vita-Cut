@@ -210,6 +210,127 @@ object FilterLibrary {
             "moody-reel", FilterCategory.SOCIAL,
             ColorAdjustments(contrast = 0.2f, saturation = -0.15f, temperature = -0.1f, blacks = -0.1f, vignette = 0.15f, grain = 0.1f),
         ),
+        filter(
+            "story-pop", FilterCategory.SOCIAL,
+            ColorAdjustments(brightness = 0.08f, contrast = 0.16f, saturation = 0.22f, vibrance = 0.18f, sharpen = 0.18f, vignette = 0.08f),
+        ),
+        filter(
+            "igtv-clean", FilterCategory.SOCIAL,
+            ColorAdjustments(brightness = 0.05f, contrast = 0.08f, saturation = 0.08f, highlights = -0.04f, whites = 0.04f),
+        ),
+
+        // Moody
+        filter(
+            "dusk", FilterCategory.MOODY,
+            ColorAdjustments(temperature = 0.12f, contrast = 0.14f, saturation = -0.08f, highlights = -0.12f, shadows = 0.08f, vignette = 0.22f),
+            sCurve(0.9f),
+        ),
+        filter(
+            "fog-city", FilterCategory.MOODY,
+            ColorAdjustments(contrast = -0.08f, saturation = -0.22f, fade = 0.2f, temperature = -0.08f, highlights = 0.08f, grain = 0.12f),
+        ),
+        filter(
+            "candle", FilterCategory.MOODY,
+            ColorAdjustments(temperature = 0.28f, contrast = 0.1f, shadows = 0.12f, blacks = -0.08f, vignette = 0.3f, saturation = 0.08f),
+        ),
+
+        // Street
+        filter(
+            "neon-tokyo", FilterCategory.STREET,
+            ColorAdjustments(contrast = 0.18f, saturation = 0.28f, vibrance = 0.2f, temperature = -0.12f, blacks = -0.1f),
+            hsl(
+                HslBand.MAGENTA to HslBandAdjustment(saturation = 0.22f),
+                HslBand.CYAN to HslBandAdjustment(saturation = 0.18f, luminance = 0.05f),
+            ),
+        ),
+        filter(
+            "concrete", FilterCategory.STREET,
+            ColorAdjustments(saturation = -0.25f, contrast = 0.16f, clarity = 0.22f, temperature = -0.06f, grain = 0.08f),
+        ),
+        filter(
+            "night-market", FilterCategory.STREET,
+            ColorAdjustments(contrast = 0.12f, saturation = 0.18f, temperature = 0.1f, shadows = 0.1f, blacks = -0.12f, grain = 0.1f),
+        ),
+
+        // Fantasy
+        filter(
+            "aurora-dream", FilterCategory.FANTASY,
+            ColorAdjustments(saturation = 0.18f, contrast = 0.08f, temperature = -0.08f, fade = 0.1f, highlights = 0.08f),
+            hsl(
+                HslBand.GREEN to HslBandAdjustment(hueDegrees = 18f, saturation = 0.2f),
+                HslBand.PURPLE to HslBandAdjustment(saturation = 0.22f, luminance = 0.06f),
+            ),
+        ),
+        filter(
+            "candy", FilterCategory.FANTASY,
+            ColorAdjustments(saturation = 0.32f, vibrance = 0.22f, brightness = 0.05f, contrast = 0.08f),
+            hsl(HslBand.MAGENTA to HslBandAdjustment(saturation = 0.18f), HslBand.RED to HslBandAdjustment(luminance = 0.05f)),
+        ),
+        filter(
+            "moonlight", FilterCategory.FANTASY,
+            ColorAdjustments(temperature = -0.22f, contrast = 0.12f, saturation = -0.12f, highlights = 0.08f, vignette = 0.18f, blacks = -0.08f),
+        ),
+
+        // Film
+        filter(
+            "kodak-portra", FilterCategory.FILM,
+            ColorAdjustments(saturation = 0.08f, contrast = 0.08f, temperature = 0.1f, fade = 0.08f, grain = 0.12f),
+            ToneCurves(
+                red = listOf(CurvePoint(0f, 0.04f), CurvePoint(1f, 0.98f)),
+                green = listOf(CurvePoint(0f, 0.02f), CurvePoint(1f, 1f)),
+                blue = listOf(CurvePoint(0f, 0.06f), CurvePoint(1f, 0.94f)),
+            ),
+        ),
+        filter(
+            "cine-still", FilterCategory.FILM,
+            ColorAdjustments(contrast = 0.16f, saturation = 0.06f, temperature = -0.05f, grain = 0.22f, vignette = 0.12f, blacks = -0.06f),
+            sCurve(1.1f),
+        ),
+        filter(
+            "bleach-bypass", FilterCategory.FILM,
+            ColorAdjustments(saturation = -0.35f, contrast = 0.28f, clarity = 0.2f, blacks = -0.12f, sharpen = 0.12f),
+            sCurve(1.3f),
+        ),
+        filter(
+            "matte-box", FilterCategory.FILM,
+            ColorAdjustments(contrast = 0.1f, fade = 0.16f, saturation = -0.08f, highlights = -0.08f, vignette = 0.18f),
+        ),
+
+        // Extra looks in existing families
+        filter(
+            "anamorphic", FilterCategory.CINEMATIC,
+            ColorAdjustments(contrast = 0.2f, saturation = 0.04f, highlights = -0.08f, vignette = 0.28f, fade = 0.06f, temperature = 0.04f),
+            sCurve(1.2f),
+        ),
+        filter(
+            "indie-film", FilterCategory.CINEMATIC,
+            ColorAdjustments(contrast = 0.12f, saturation = -0.12f, temperature = 0.08f, fade = 0.14f, grain = 0.16f),
+        ),
+        filter(
+            "soft-glam", FilterCategory.PORTRAIT,
+            ColorAdjustments(brightness = 0.06f, contrast = -0.04f, saturation = 0.04f, temperature = 0.08f, highlights = 0.06f),
+            hsl(HslBand.ORANGE to HslBandAdjustment(luminance = 0.1f, saturation = -0.04f)),
+        ),
+        filter(
+            "desert-gold", FilterCategory.TRAVEL,
+            ColorAdjustments(temperature = 0.24f, saturation = 0.14f, contrast = 0.12f, highlights = -0.06f, clarity = 0.12f),
+        ),
+        filter(
+            "juicy", FilterCategory.FOOD,
+            ColorAdjustments(saturation = 0.28f, vibrance = 0.18f, contrast = 0.1f, temperature = 0.1f, sharpen = 0.16f),
+        ),
+        filter(
+            "honey", FilterCategory.WARM,
+            ColorAdjustments(temperature = 0.3f, saturation = 0.12f, brightness = 0.04f, fade = 0.06f),
+        ),
+        filter(
+            "ice-blue", FilterCategory.COOL,
+            ColorAdjustments(temperature = -0.28f, contrast = 0.1f, whites = 0.08f, saturation = -0.04f),
+        ),
+        filter(
+            "disposable-cam", FilterCategory.RETRO,
+            ColorAdjustments(contrast = 0.06f, saturation = 0.08f, temperature = 0.12f, fade = 0.16f, grain = 0.28f, vignette = 0.18f),
+        ),
     )
 
     private val byId = ALL.associateBy { it.id }

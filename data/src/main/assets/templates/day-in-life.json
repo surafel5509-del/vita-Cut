@@ -1,0 +1,17 @@
+{
+  "id": "bundled-day-in-life",
+  "nameKey": "template_day_in_life",
+  "category": "VLOG",
+  "canvas": { "aspectRatio": "RATIO_9_16", "customWidth": 1080, "customHeight": 1920 },
+  "frameRate": 30.0,
+  "slots": [
+    { "order": 0, "kind": "TEXT", "durationUs": 1600000, "textKey": "template_text_title_default" },
+    { "order": 1, "kind": "MEDIA", "durationUs": 2000000, "transitionOut": "SLIDE", "transitionDurationUs": 400000, "suggestedFilterId": "wanderlust" },
+    { "order": 2, "kind": "MEDIA", "durationUs": 2000000, "transitionOut": "FADE", "transitionDurationUs": 400000, "suggestedFilterId": "coastal" },
+    { "order": 3, "kind": "MEDIA", "durationUs": 2000000, "transitionOut": "SLIDE", "transitionDurationUs": 400000, "suggestedFilterId": "golden-hour" },
+    { "order": 4, "kind": "MEDIA", "durationUs": 2200000, "transitionOut": "FADE", "transitionDurationUs": 500000, "suggestedFilterId": "moody-reel" },
+    { "order": 5, "kind": "MEDIA", "durationUs": 2400000, "suggestedFilterId": "wanderlust" }
+  ],
+  "thumbnailKey": "template_day_in_life",
+  "descriptionKey": "template_day_in_life_desc"
+}

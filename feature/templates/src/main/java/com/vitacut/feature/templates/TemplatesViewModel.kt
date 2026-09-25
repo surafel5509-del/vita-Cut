@@ -20,6 +20,7 @@ data class TemplatesUiState(
     val templates: List<TemplateMeta> = emptyList(),
     val isLoading: Boolean = true,
     val errorKey: String? = null,
+    val category: String? = null,
 )
 
 @HiltViewModel
@@ -33,8 +34,16 @@ class TemplatesViewModel @Inject constructor(
     val uiState: StateFlow<TemplatesUiState> = combine(
         repository.observeTemplates(),
         local,
-    ) { templates, ui -> ui.copy(templates = templates, isLoading = false) }
+    ) { templates, ui ->
+        val filtered = if (ui.category == null) templates
+        else templates.filter { it.template.category.name == ui.category }
+        ui.copy(templates = filtered, isLoading = false)
+    }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), local.value)
+
+    fun setCategory(category: String?) {
+        local.value = local.value.copy(category = category)
+    }
 
     fun useTemplate(template: Template, projectName: String, onCreated: (String) -> Unit) {
         viewModelScope.launch {

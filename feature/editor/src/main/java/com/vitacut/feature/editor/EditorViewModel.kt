@@ -71,6 +71,7 @@ import javax.inject.Inject
 enum class EditorSheet {
     MEDIA, CLIP, SPEED, AUDIO, TEXT, STICKER, FILTERS, EFFECTS, ADJUST,
     TRANSITION, CANVAS, CAPTIONS, AI, KEYFRAME,
+    TRANSFORM, MASK, CHROMA, OVERLAY,
 }
 
 data class EditorUiState(
@@ -255,6 +256,7 @@ class EditorViewModel @Inject constructor(
         val needsSelection = sheet in setOf(
             EditorSheet.CLIP, EditorSheet.SPEED, EditorSheet.AUDIO,
             EditorSheet.TRANSITION, EditorSheet.KEYFRAME,
+            EditorSheet.TRANSFORM, EditorSheet.MASK, EditorSheet.CHROMA,
         )
         if (needsSelection && _uiState.value.selectedItemId == null) {
             message("editor_no_clip_selected")
@@ -587,6 +589,120 @@ class EditorViewModel @Inject constructor(
 
     fun setCanvasBackground(background: com.vitacut.core.model.CanvasBackground) {
         document?.update("canvas.background") { TimelineEngine.setCanvasBackground(it, background) }
+    }
+
+    fun updateTransform(transform: (com.vitacut.core.model.SpatialTransform) -> com.vitacut.core.model.SpatialTransform) {
+        val doc = document ?: return
+        val id = _uiState.value.selectedItemId ?: return
+        val item = doc.project.item(id) ?: return
+        val current = when (item) {
+            is VideoClipItem -> item.transform
+            is TextItem -> item.transform
+            is StickerItem -> item.transform
+            else -> return
+        }
+        doc.update("transform.set") { TimelineEngine.setTransform(it, id, transform(current)) }
+    }
+
+    fun rotateSelected(deltaDegrees: Float = 90f) {
+        val doc = document ?: return
+        val id = _uiState.value.selectedItemId ?: return
+        doc.update("transform.rotate") { TimelineEngine.rotateItem(it, id, deltaDegrees) }
+    }
+
+    fun flipSelected(horizontal: Boolean) {
+        val doc = document ?: return
+        val id = _uiState.value.selectedItemId ?: return
+        doc.update("transform.flip") { TimelineEngine.flipItem(it, id, horizontal) }
+    }
+
+    fun setBlendMode(mode: com.vitacut.core.model.BlendMode) {
+        val doc = document ?: return
+        val id = _uiState.value.selectedItemId ?: return
+        doc.update("blend.set") { TimelineEngine.setBlendMode(it, id, mode) }
+    }
+
+    fun setMask(mask: com.vitacut.core.model.MaskSettings) {
+        val doc = document ?: return
+        val id = _uiState.value.selectedItemId ?: return
+        doc.update("mask.set") { TimelineEngine.setMask(it, id, mask) }
+    }
+
+    fun setChromaKey(chroma: com.vitacut.core.model.ChromaKeySettings) {
+        val doc = document ?: return
+        val id = _uiState.value.selectedItemId ?: return
+        doc.update("chroma.set") { TimelineEngine.setChromaKey(it, id, chroma) }
+    }
+
+    fun setAudioEffects(effects: com.vitacut.core.model.AudioEffects) {
+        val doc = document ?: return
+        val id = _uiState.value.selectedItemId ?: return
+        doc.update("audio.fx") { TimelineEngine.setAudioEffects(it, id, effects) }
+    }
+
+    fun setCrop(crop: com.vitacut.core.model.CropSettings) {
+        val doc = document ?: return
+        val id = _uiState.value.selectedItemId ?: return
+        doc.update("crop.set") { TimelineEngine.setCrop(it, id, crop) }
+    }
+
+    fun setContentFit(fit: com.vitacut.core.model.ContentFit) {
+        val doc = document ?: return
+        val id = _uiState.value.selectedItemId ?: return
+        doc.update("fit.set") { TimelineEngine.setContentFit(it, id, fit) }
+    }
+
+    fun applyTextPreset(presetId: String) {
+        val preset = com.vitacut.core.model.TextStyleLibrary.byId(presetId) ?: return
+        val doc = document ?: return
+        val id = _uiState.value.selectedItemId
+        if (id == null) {
+            addText("Text")
+        }
+        val target = _uiState.value.selectedItemId ?: return
+        doc.update("text.preset") {
+            TimelineEngine.updateText(it, target) { item ->
+                item.copy(
+                    style = preset.style,
+                    animations = item.animations.copy(
+                        inAnimation = preset.inAnimation,
+                        outAnimation = preset.outAnimation,
+                        loopAnimation = preset.loopAnimation,
+                    ),
+                )
+            }
+        }
+    }
+
+    fun addOverlay(uris: List<Uri>) {
+        val doc = document ?: return
+        if (uris.isEmpty()) return
+        busy("media_importing")
+        viewModelScope.launch {
+            val assets = metadataReader.readAssets(uris).filterNotNull()
+            if (assets.isEmpty()) {
+                done()
+                message("error_unsupported_media")
+                return@launch
+            }
+            doc.update("overlay.add") { project ->
+                var p = TimelineEngine.addAssets(project, assets)
+                for (asset in assets) {
+                    p = TimelineEngine.insertOverlayClip(p, asset, atUs = playheadOrEnd(p))
+                }
+                p
+            }
+            done()
+        }
+    }
+
+    fun pasteAttributesFromPrevious() {
+        val doc = document ?: return
+        val id = _uiState.value.selectedItemId ?: return
+        val clips = doc.project.videoClips()
+        val index = clips.indexOfFirst { it.id == id }
+        if (index <= 0) return
+        doc.update("look.paste") { TimelineEngine.pasteAttributes(it, clips[index - 1].id, id) }
     }
 
     // endregion

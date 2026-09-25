@@ -2,8 +2,10 @@ package com.vitacut.core.timeline
 
 import com.vitacut.core.model.AssetId
 import com.vitacut.core.model.AudioClipItem
+import com.vitacut.core.model.AudioEffects
 import com.vitacut.core.model.CanvasBackground
 import com.vitacut.core.model.CanvasSettings
+import com.vitacut.core.model.ContentFit
 import com.vitacut.core.model.CropSettings
 import com.vitacut.core.model.EffectInstance
 import com.vitacut.core.model.FilterState
@@ -383,10 +385,15 @@ object TimelineEngine {
     fun setClipVolume(project: Project, itemId: ItemId, volume: Float): Project =
         mapItem(project, itemId) { item ->
             when (item) {
-                is VideoClipItem -> item.copy(volume = volume.coerceIn(0f, 1f))
-                is AudioClipItem -> item.copy(volume = volume.coerceIn(0f, 1f))
+                is VideoClipItem -> item.copy(volume = volume.coerceIn(0f, 2f))
+                is AudioClipItem -> item.copy(volume = volume.coerceIn(0f, 2f))
                 else -> item
             }
+        }
+
+    fun setAudioEffects(project: Project, itemId: ItemId, effects: AudioEffects): Project =
+        mapItem(project, itemId) { item ->
+            if (item is AudioClipItem) item.copy(audioEffects = effects) else item
         }
 
     fun setClipMuted(project: Project, itemId: ItemId, muted: Boolean): Project =
@@ -578,6 +585,63 @@ object TimelineEngine {
         mapItem(project, itemId) { item ->
             if (item is VideoClipItem) item.copy(blendMode = mode) else item
         }
+
+    fun rotateItem(project: Project, itemId: ItemId, deltaDegrees: Float): Project =
+        mapItem(project, itemId) { item ->
+            val current = when (item) {
+                is VideoClipItem -> item.transform
+                is TextItem -> item.transform
+                is StickerItem -> item.transform
+                is AudioClipItem -> return@mapItem item
+            }
+            withTransform(item, current.copy(rotationDegrees = current.rotationDegrees + deltaDegrees))
+        }
+
+    fun flipItem(project: Project, itemId: ItemId, horizontal: Boolean): Project =
+        mapItem(project, itemId) { item ->
+            val current = when (item) {
+                is VideoClipItem -> item.transform
+                is TextItem -> item.transform
+                is StickerItem -> item.transform
+                is AudioClipItem -> return@mapItem item
+            }
+            withTransform(
+                item,
+                if (horizontal) current.copy(flipHorizontal = !current.flipHorizontal)
+                else current.copy(flipVertical = !current.flipVertical),
+            )
+        }
+
+    /**
+     * Picture-in-picture: places [asset] on an overlay track at [atUs] with a corner transform
+     * so it sits above the main video instead of replacing it.
+     */
+    fun insertOverlayClip(
+        project: Project,
+        asset: MediaAsset,
+        atUs: Long,
+        durationUs: Long = 3_000_000L,
+    ): Project {
+        if (!asset.isVisual) return project
+        val isStill = asset.kind == com.vitacut.core.model.MediaKind.IMAGE
+        val sourceOut = if (isStill) 0L else asset.durationUs
+        val duration = if (isStill) durationUs else asset.durationUs.coerceAtLeast(minDurationUs())
+        val overlay = VideoClipItem(
+            assetId = asset.id,
+            timelineStartUs = atUs.coerceAtLeast(0L),
+            sourceInUs = 0L,
+            sourceOutUs = sourceOut,
+            durationUs = duration,
+            transform = SpatialTransform(
+                translationX = 0.42f,
+                translationY = -0.38f,
+                scaleX = 0.42f,
+                scaleY = 0.42f,
+            ),
+            contentFit = ContentFit.FIT,
+        )
+        return insertItem(project, null, TrackKind.OVERLAY, overlay)
+    }
 
     fun setTransition(
         project: Project,

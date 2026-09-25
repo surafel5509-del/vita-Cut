@@ -129,15 +129,18 @@ enum class TextAlignment { START, CENTER, END }
 
 /** Text entrance animation. */
 @Serializable
-enum class TextAnimationIn { NONE, FADE, ZOOM, SLIDE, BOUNCE, TYPEWRITER, POP }
+enum class TextAnimationIn {
+    NONE, FADE, ZOOM, SLIDE, BOUNCE, TYPEWRITER, POP,
+    GLITCH, WAVE, FLIP, SLIDE_UP, SLIDE_DOWN, ROTATE, NEON,
+}
 
 /** Text exit animation. */
 @Serializable
-enum class TextAnimationOut { NONE, FADE, SLIDE, ZOOM, BLUR }
+enum class TextAnimationOut { NONE, FADE, SLIDE, ZOOM, BLUR, POP, GLITCH, SPIN }
 
 /** Text loop animation (plays between in and out). */
 @Serializable
-enum class TextAnimationLoop { NONE, PULSE, BOUNCE, SHAKE, FLOATING }
+enum class TextAnimationLoop { NONE, PULSE, BOUNCE, SHAKE, FLOATING, WAVE, GLITCH, NEON, WIGGLE }
 
 @Serializable
 data class TextAnimations(

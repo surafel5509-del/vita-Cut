@@ -1,0 +1,16 @@
+{
+  "id": "bundled-business-promo",
+  "nameKey": "template_business_promo",
+  "category": "BUSINESS",
+  "canvas": { "aspectRatio": "RATIO_1_1", "customWidth": 1080, "customHeight": 1080 },
+  "frameRate": 30.0,
+  "slots": [
+    { "order": 0, "kind": "TEXT", "durationUs": 1800000, "textKey": "template_text_title_default" },
+    { "order": 1, "kind": "MEDIA", "durationUs": 2200000, "transitionOut": "FADE", "transitionDurationUs": 400000, "suggestedFilterId": "igtv-clean" },
+    { "order": 2, "kind": "MEDIA", "durationUs": 2200000, "transitionOut": "SLIDE", "transitionDurationUs": 400000, "suggestedFilterId": "igtv-clean" },
+    { "order": 3, "kind": "MEDIA", "durationUs": 2400000, "suggestedFilterId": "clean-feed" },
+    { "order": 4, "kind": "TEXT", "durationUs": 2000000, "textKey": "template_text_follow_default" }
+  ],
+  "thumbnailKey": "template_business_promo",
+  "descriptionKey": "template_business_promo_desc"
+}

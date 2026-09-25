@@ -21,6 +21,8 @@ import com.vitacut.core.model.KeyframeProperty
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
+import kotlin.math.cos
+import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sin
@@ -107,6 +109,7 @@ class TextLayerRenderer @Inject constructor(
             scaleOverride = 1f, // scale already applied through textSizePx; keep bitmap 1:1
             translationOverrideX = transform.translationX + anim.offsetX,
             translationOverrideY = transform.translationY + anim.offsetY,
+            rotationOverride = transform.rotationDegrees + anim.rotationDegrees,
         )
         return RenderedOverlay(bitmap, placement)
     }
@@ -116,6 +119,7 @@ class TextLayerRenderer @Inject constructor(
         val scale: Float,
         val offsetX: Float, // NDC units
         val offsetY: Float,
+        val rotationDegrees: Float,
         val visibleTextLength: Int,
     )
 
@@ -124,6 +128,7 @@ class TextLayerRenderer @Inject constructor(
         var scale = 1f
         var offsetX = 0f
         var offsetY = 0f
+        var rotation = 0f
         var visibleLength = item.text.length
 
         val inDur = item.animations.inDurationUs.coerceAtLeast(1L)
@@ -142,7 +147,6 @@ class TextLayerRenderer @Inject constructor(
                 }
                 TextAnimationIn.BOUNCE -> {
                     opacity = min(1f, p * 3f)
-                    // Overshoot: 0 → 1.15 → 1
                     val overshoot = if (p < 0.6f) p / 0.6f * 1.15f else 1.15f - (p - 0.6f) / 0.4f * 0.15f
                     scale = 0.3f + 0.7f * overshoot
                 }
@@ -152,6 +156,36 @@ class TextLayerRenderer @Inject constructor(
                 TextAnimationIn.POP -> {
                     opacity = min(1f, p * 2f)
                     scale = 0.8f + 0.4f * sin(p * Math.PI.toFloat())
+                }
+                TextAnimationIn.GLITCH -> {
+                    opacity = min(1f, p * 3f)
+                    offsetX = (hash(p * 17f) - 0.5f) * 0.08f * (1f - p)
+                    offsetY = (hash(p * 29f) - 0.5f) * 0.04f * (1f - p)
+                }
+                TextAnimationIn.WAVE -> {
+                    opacity = min(1f, p * 2f)
+                    offsetY = sin(p * Math.PI.toFloat() * 2f) * 0.12f * (1f - p)
+                }
+                TextAnimationIn.FLIP -> {
+                    opacity = min(1f, p * 2f)
+                    scale = abs(cos((1f - p) * Math.PI.toFloat()))
+                }
+                TextAnimationIn.SLIDE_UP -> {
+                    opacity = min(1f, p * 2f)
+                    offsetY = -(1f - KeyframeMath.smoothStep(p)) * 0.55f
+                }
+                TextAnimationIn.SLIDE_DOWN -> {
+                    opacity = min(1f, p * 2f)
+                    offsetY = (1f - KeyframeMath.smoothStep(p)) * 0.55f
+                }
+                TextAnimationIn.ROTATE -> {
+                    opacity = min(1f, p * 2f)
+                    rotation = (1f - KeyframeMath.smoothStep(p)) * -28f
+                    scale = 0.7f + 0.3f * p
+                }
+                TextAnimationIn.NEON -> {
+                    opacity = min(1f, p * 1.6f)
+                    scale = 0.92f + 0.08f * sin(p * Math.PI.toFloat() * 3f)
                 }
             }
         }
@@ -172,14 +206,25 @@ class TextLayerRenderer @Inject constructor(
                     scale *= 1f + p * 0.8f
                 }
                 TextAnimationOut.BLUR -> {
-                    // No blur pass for overlays in v1: fade + slight shrink reads similarly at speed.
                     opacity *= (1f - p * p)
                     scale *= 1f - 0.1f * p
+                }
+                TextAnimationOut.POP -> {
+                    opacity *= (1f - p)
+                    scale *= 1f + 0.4f * p
+                }
+                TextAnimationOut.GLITCH -> {
+                    opacity *= (1f - p)
+                    offsetX += (hash(p * 41f) - 0.5f) * 0.1f
+                }
+                TextAnimationOut.SPIN -> {
+                    opacity *= (1f - p)
+                    rotation += p * 90f
+                    scale *= 1f - 0.25f * p
                 }
             }
         }
 
-        // Loop animations run between in and out.
         val loopStart = inDur
         val loopEnd = if (item.durationUs > outDur) outStart else item.durationUs
         if (localUs in loopStart..loopEnd) {
@@ -193,10 +238,33 @@ class TextLayerRenderer @Inject constructor(
                     offsetY += 0.03f * sin(t * 1.7f)
                     offsetX += 0.015f * sin(t * 1.1f)
                 }
+                TextAnimationLoop.WAVE -> offsetY += 0.04f * sin(t * 5f)
+                TextAnimationLoop.GLITCH -> {
+                    if (sin(t * 13f) > 0.85f) {
+                        offsetX += (hash(t) - 0.5f) * 0.06f
+                    }
+                }
+                TextAnimationLoop.NEON -> opacity *= 0.82f + 0.18f * abs(sin(t * 6f))
+                TextAnimationLoop.WIGGLE -> {
+                    rotation += sin(t * 8f) * 4f
+                    offsetX += sin(t * 6f) * 0.012f
+                }
             }
         }
 
-        return AnimationState(opacity.coerceIn(0f, 1f), scale, offsetX, offsetY, visibleLength)
+        return AnimationState(
+            opacity.coerceIn(0f, 1f),
+            scale,
+            offsetX,
+            offsetY,
+            rotation,
+            visibleLength,
+        )
+    }
+
+    private fun hash(n: Float): Float {
+        val x = sin(n * 12.9898f) * 43758.5453f
+        return x - floor(x)
     }
 
     private fun rasterize(

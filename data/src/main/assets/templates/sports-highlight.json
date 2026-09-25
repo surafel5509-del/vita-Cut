@@ -1,0 +1,17 @@
+{
+  "id": "bundled-sports-highlight",
+  "nameKey": "template_sports_highlight",
+  "category": "SPORTS",
+  "canvas": { "aspectRatio": "RATIO_9_16", "customWidth": 1080, "customHeight": 1920 },
+  "frameRate": 30.0,
+  "slots": [
+    { "order": 0, "kind": "TEXT", "durationUs": 1200000, "textKey": "template_text_title_default" },
+    { "order": 1, "kind": "MEDIA", "durationUs": 1400000, "transitionOut": "WHIP_PAN", "transitionDurationUs": 220000, "suggestedFilterId": "blockbuster" },
+    { "order": 2, "kind": "MEDIA", "durationUs": 1400000, "transitionOut": "FLASH_IN", "transitionDurationUs": 180000, "suggestedFilterId": "blockbuster" },
+    { "order": 3, "kind": "MEDIA", "durationUs": 1400000, "transitionOut": "WHIP_PAN", "transitionDurationUs": 220000, "suggestedFilterId": "summit" },
+    { "order": 4, "kind": "MEDIA", "durationUs": 1600000, "transitionOut": "ZOOM_IN", "transitionDurationUs": 250000, "suggestedFilterId": "blockbuster" },
+    { "order": 5, "kind": "MEDIA", "durationUs": 2000000, "suggestedFilterId": "creator-pop" }
+  ],
+  "thumbnailKey": "template_sports_highlight",
+  "descriptionKey": "template_sports_highlight_desc"
+}

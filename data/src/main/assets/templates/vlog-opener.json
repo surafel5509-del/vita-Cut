@@ -1,0 +1,16 @@
+{
+  "id": "bundled-vlog-opener",
+  "nameKey": "template_vlog_opener",
+  "category": "VLOG",
+  "canvas": { "aspectRatio": "RATIO_16_9", "customWidth": 1920, "customHeight": 1080 },
+  "frameRate": 30.0,
+  "slots": [
+    { "order": 0, "kind": "MEDIA", "durationUs": 2000000, "transitionOut": "FADE", "transitionDurationUs": 400000, "suggestedFilterId": "clean-feed" },
+    { "order": 1, "kind": "TEXT", "durationUs": 2500000, "textKey": "template_text_title_default" },
+    { "order": 2, "kind": "MEDIA", "durationUs": 2200000, "transitionOut": "FLASH_IN", "transitionDurationUs": 250000, "suggestedFilterId": "clean-feed" },
+    { "order": 3, "kind": "MEDIA", "durationUs": 2200000, "transitionOut": "FADE", "transitionDurationUs": 400000, "suggestedFilterId": "skin-glow" },
+    { "order": 4, "kind": "MEDIA", "durationUs": 2800000, "suggestedFilterId": "skin-glow" }
+  ],
+  "thumbnailKey": "template_vlog_opener",
+  "descriptionKey": "template_vlog_opener_desc"
+}

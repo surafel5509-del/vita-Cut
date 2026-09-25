@@ -80,6 +80,16 @@ class TransitionEffect(
             TransitionKind.FLIP -> 19
             TransitionKind.WIPE -> 20
             TransitionKind.CINEMATIC_BARS -> 21
+            TransitionKind.CROSS_ZOOM -> 22
+            TransitionKind.SWIRL -> 23
+            TransitionKind.PIXELATE_OUT -> 24
+            TransitionKind.IRIS -> 25
+            TransitionKind.CLOCK_WIPE -> 26
+            TransitionKind.WHIP_PAN -> 27
+            TransitionKind.HEARTBEAT -> 28
+            TransitionKind.CIRCLE_OPEN -> 29
+            TransitionKind.DIAGONAL_WIPE -> 30
+            TransitionKind.FADE_COLOR -> 31
         }
 
         fun dirIndex(direction: TransitionDirection): Int = when (direction) {

@@ -176,12 +176,125 @@ void main() {
     }
 
     // 21 CINEMATIC_BARS: letterbox bars close in as the transition progresses.
-    {
+    if (uKind == 21) {
         vec4 c = texture2D(uTexSampler, uv);
         float limit = 1.0 - p * 0.55;
         float inBar = smoothstep(limit, limit + 0.02, abs(uv.y - 0.5) * 2.0);
         c.rgb = mix(c.rgb, vec3(0.0), inBar);
         c.rgb *= (1.0 - p * 0.35);
         gl_FragColor = c;
+        return;
+    }
+
+    // 22 CROSS_ZOOM
+    if (uKind == 22) {
+        float scale = mix(1.0, 2.6, p);
+        vec2 z = (uv - 0.5) / scale + 0.5;
+        vec4 c = texture2D(uTexSampler, clamp(z, vec2(0.0), vec2(1.0)));
+        c.rgb *= (1.0 - p);
+        gl_FragColor = c;
+        return;
+    }
+
+    // 23 SWIRL
+    if (uKind == 23) {
+        vec2 q = uv - 0.5;
+        q.x *= uAspect;
+        float d = length(q);
+        float angle = p * 6.5 * (1.0 - d);
+        float s = sin(angle); float c = cos(angle);
+        q = vec2(q.x * c - q.y * s, q.x * s + q.y * c);
+        q.x /= uAspect;
+        vec4 sample4 = texture2D(uTexSampler, clamp(q + 0.5, vec2(0.0), vec2(1.0)));
+        sample4.rgb *= (1.0 - p * 0.85);
+        gl_FragColor = sample4;
+        return;
+    }
+
+    // 24 PIXELATE_OUT
+    if (uKind == 24) {
+        float cells = mix(80.0, 6.0, p);
+        vec2 grid = (floor(uv * cells) + 0.5) / cells;
+        vec4 c = texture2D(uTexSampler, grid);
+        c.rgb *= (1.0 - p);
+        gl_FragColor = c;
+        return;
+    }
+
+    // 25 IRIS
+    if (uKind == 25) {
+        vec2 q = uv - 0.5;
+        q.x *= uAspect;
+        float r = length(q);
+        float open = mix(0.85, 0.0, p);
+        float mask = smoothstep(open, open + 0.04, r);
+        vec4 c = texture2D(uTexSampler, uv);
+        gl_FragColor = vec4(c.rgb * (1.0 - mask), c.a);
+        return;
+    }
+
+    // 26 CLOCK_WIPE
+    if (uKind == 26) {
+        vec2 q = uv - 0.5;
+        float ang = atan(q.y, q.x);
+        float sweep = mix(-3.14159, 3.14159, p);
+        float keep = step(ang, sweep);
+        vec4 c = texture2D(uTexSampler, uv);
+        gl_FragColor = vec4(c.rgb * keep, c.a);
+        return;
+    }
+
+    // 27 WHIP_PAN
+    if (uKind == 27) {
+        vec2 shift = vec2(0.0);
+        if (uDir == 0) shift = vec2(-p * 1.4, 0.0);
+        else if (uDir == 1) shift = vec2(p * 1.4, 0.0);
+        else if (uDir == 2) shift = vec2(0.0, p * 1.4);
+        else shift = vec2(0.0, -p * 1.4);
+        vec3 blurred = blurSample(uv + shift * 0.2, 6.0 + p * 18.0);
+        vec2 s = uv + shift;
+        vec4 c = texture2D(uTexSampler, clamp(s, vec2(0.0), vec2(1.0)));
+        gl_FragColor = vec4(mix(c.rgb, blurred, p) * (1.0 - p * 0.4), 1.0);
+        return;
+    }
+
+    // 28 HEARTBEAT
+    if (uKind == 28) {
+        float beat = abs(sin(p * 3.14159 * 2.0));
+        float scale = 1.0 + beat * 0.18;
+        vec2 z = (uv - 0.5) / scale + 0.5;
+        vec4 c = texture2D(uTexSampler, clamp(z, vec2(0.0), vec2(1.0)));
+        c.rgb *= (1.0 - p * 0.7);
+        gl_FragColor = c;
+        return;
+    }
+
+    // 29 CIRCLE_OPEN
+    if (uKind == 29) {
+        vec2 q = uv - 0.5;
+        q.x *= uAspect;
+        float r = length(q);
+        float open = mix(0.0, 1.2, p);
+        float mask = smoothstep(open - 0.04, open, r);
+        vec4 c = texture2D(uTexSampler, uv);
+        gl_FragColor = vec4(c.rgb * mask, c.a);
+        return;
+    }
+
+    // 30 DIAGONAL_WIPE
+    if (uKind == 30) {
+        float coord = (uDir == 1 || uDir == 3) ? (uv.x + uv.y) * 0.5 : (1.0 - uv.x + uv.y) * 0.5;
+        float edge = smoothstep(p, p - 0.05, coord);
+        vec4 c = texture2D(uTexSampler, uv);
+        gl_FragColor = vec4(c.rgb * edge, c.a * edge);
+        return;
+    }
+
+    // 31 FADE_COLOR (through aurora violet)
+    {
+        vec4 c = texture2D(uTexSampler, uv);
+        vec3 wash = vec3(0.55, 0.36, 0.96);
+        float flash = sin(p * 3.14159);
+        gl_FragColor = vec4(mix(c.rgb, wash, flash), c.a);
     }
 }

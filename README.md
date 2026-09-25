@@ -1,10 +1,14 @@
-# Vita Cut
+# Vita Cut Ultimate Studio
 
 **Create. Edit. Inspire.**
 
-Vita Cut is a production-quality, dark-first video editor for Android (8.0 / API 26+), built with
-Kotlin, Jetpack Compose, Media3/ExoPlayer, and Clean Architecture. Everything runs on-device:
-no accounts, no analytics, no media ever leaves the phone.
+Vita Cut is a production-quality, dark-first professional video editor for Android (8.0 / API 26+),
+built with Kotlin, Jetpack Compose, Media3/ExoPlayer, and Clean Architecture. Everything runs
+on-device: no accounts, no analytics, no media ever leaves the phone.
+
+Version **2.0.0 — Ultimate Studio** expands the editor into a full modern NLE: 40+ GPU effects,
+14 filter families, 32 transitions, 16 text style presets, picture-in-picture, masks, chroma key,
+audio FX and a 15-template gallery.
 
 ---
 
@@ -20,18 +24,23 @@ no accounts, no analytics, no media ever leaves the phone.
   pinch-to-zoom (16–2400 px/s), magnetic snapping, thumbnail strips and audio waveforms,
   playhead scrubbing, drag-to-move and trim handles.
 - **Clip tools**: split, trim, duplicate, delete, reverse (real transcode, with progress),
-  freeze frame, detach audio, volume, fades.
+  freeze frame, detach audio, rotate / flip, crop, content-fit, paste look, volume, fades.
+- **Transform**: position, scale, rotation, opacity, blend modes, picture-in-picture overlays.
 - **Speed**: constant 0.1×–8× plus curve presets — Montage, Bullet, Hero, Jump Cut, Flash In,
   Flash Out — and a custom speed-curve model.
-- **Transitions** across 11 categories (basic, blur, zoom, spin, slide, shake, glitch, flash,
-  light, 3D, cinematic) rendered by per-clip edge shaders.
-- **Effects** in Trending / Cinematic / Distortion / Retro categories, each with intensity and
-  enable toggles.
-- **Filters** (10 categories) implemented as named color-grading deltas, with keyframeable
-  intensity.
+- **Transitions** across 12 categories (basic, blur, zoom, spin, slide, shake, glitch, flash,
+  light, 3D, cinematic, creative) including iris, whip pan, swirl, pixelate, heartbeat and
+  diagonal wipe — rendered by per-clip edge shaders.
+- **Effects** in Trending / Cinematic / Distortion / Retro / Light / Stylize / Motion / Nature
+  (40+ GPU effects: bloom, neon, rain, snow, kaleidoscope, thermal, night vision…) with
+  intensity and enable toggles.
+- **Filters** (14 families, 40+ looks) implemented as named color-grading deltas, with
+  keyframeable intensity.
 - **Color grading**: 16 sliders (brightness … grain), RGB tone curves, HSL and LUT support.
-- **Text**: styled text items with in/loop/out animations; stickers (emoji, built-in vector set,
-  imported images); overlays with blend modes; masking, chroma key and basic motion tracking.
+- **Text**: 16 cinematic style presets, 14 in-animations, 8 out-animations, 9 loop animations;
+  stickers (emoji, built-in vector set, imported images); overlays with blend modes; masking,
+  chroma key and basic motion tracking.
+- **Audio FX**: bass, treble, reverb, echo, noise reduction, voice enhance, normalize.
 - **Captions**: assisted offline caption generation, karaoke highlight, style/position controls,
   per-cue editing, split/delete, SRT & VTT import/export and sharing.
 - **Smart tools (AI)**: auto reframe (16:9 / 9:16 / 1:1 / 4:5), silence removal, beat sync,
@@ -55,7 +64,8 @@ no accounts, no analytics, no media ever leaves the phone.
   proxy media, autosave, reduced motion, notifications, haptics, cache management, privacy.
 
 ### Templates
-- Bundled starter templates (Quick Reel, Travel Montage, Beat Drop), favorites, use-count,
+- 15 bundled templates across TikTok, Reels, Shorts, YouTube, Travel, Birthday, Wedding,
+  Sports, Cinematic, Vlog and Business, with category chips, favorites, use-count and
   save-current-project-as-template.
 
 ---
@@ -117,6 +127,10 @@ Requires JDK 17 and the Android SDK (compileSdk 35). The Gradle wrapper is fully
 (`gradlew`/`gradlew.bat` + `gradle/wrapper/gradle-wrapper.jar` + `gradle-wrapper.properties` for
 Gradle 8.9) — just run `./gradlew` and the distribution is downloaded automatically.
 
+GitHub Actions (`.github/workflows/ci.yml`) runs unit tests, assembles the debug APK with the
+wrapper, then verifies the artifact (zip integrity, `classes*.dex`, `aapt dump badging` for
+`com.vitacut.debug` / minSdk 26 / targetSdk 35) and uploads `vitacut-debug-apk`.
+
 ## Testing
 
 - **Unit tests** (pure JVM): project serialization, timeline engine ops, speed math, snapping &
@@ -133,3 +147,6 @@ Gradle 8.9) — just run `./gradlew` and the distribution is downloaded automati
 
 All seven build phases are complete: scaffold → model/timeline → media/rendering/database →
 export → captions → AI → design system, features, app wiring and localization.
+
+**2.0.0 Ultimate Studio** adds the professional toolset (effects, filters, transitions, text
+styles, animations, templates, PiP, mask, chroma, audio FX) and a verified debug-APK workflow.

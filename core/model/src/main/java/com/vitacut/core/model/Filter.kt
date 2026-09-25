@@ -15,6 +15,10 @@ enum class FilterCategory {
     COOL,
     RETRO,
     SOCIAL,
+    MOODY,
+    STREET,
+    FANTASY,
+    FILM,
 }
 
 /**

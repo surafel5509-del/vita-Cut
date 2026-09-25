@@ -1,0 +1,15 @@
+{
+  "id": "bundled-youtube-intro",
+  "nameKey": "template_youtube_intro",
+  "category": "YOUTUBE",
+  "canvas": { "aspectRatio": "RATIO_16_9", "customWidth": 1920, "customHeight": 1080 },
+  "frameRate": 30.0,
+  "slots": [
+    { "order": 0, "kind": "MEDIA", "durationUs": 1800000, "transitionOut": "LIGHT_SWEEP", "transitionDurationUs": 500000, "suggestedFilterId": "blockbuster" },
+    { "order": 1, "kind": "TEXT", "durationUs": 2200000, "textKey": "template_text_title_default" },
+    { "order": 2, "kind": "MEDIA", "durationUs": 2400000, "transitionOut": "FADE", "transitionDurationUs": 600000, "suggestedFilterId": "blockbuster" },
+    { "order": 3, "kind": "MEDIA", "durationUs": 3000000, "suggestedFilterId": "clean-feed" }
+  ],
+  "thumbnailKey": "template_youtube_intro",
+  "descriptionKey": "template_youtube_intro_desc"
+}

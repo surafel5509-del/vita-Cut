@@ -41,7 +41,7 @@ void main() {
         // subtle bulge
         p *= 1.0 - uIntensity * 0.1 * exp(-d * 2.5);
         uv = aspectRestore(p);
-    } else {
+    } else if (uMode == 3) {
         vec2 p = (uv - 0.5) * 2.0;
         p.x *= uAspect / max(uAspect, 1.0);
         float r2 = dot(p, p);
@@ -53,6 +53,26 @@ void main() {
             gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
             return;
         }
+    } else if (uMode == 4) {
+        // Mirror: fold the frame around the vertical axis, intensity blends in a second fold.
+        float axis = mix(0.5, 0.35, uIntensity);
+        if (uv.x > axis) {
+            uv.x = axis - (uv.x - axis);
+        }
+        if (uIntensity > 0.65 && uv.y > 0.5) {
+            uv.y = 1.0 - uv.y;
+        }
+    } else {
+        // Kaleidoscope
+        vec2 p = aspectCorrect(uv);
+        float angle = atan(p.y, p.x);
+        float radius = length(p);
+        float slices = mix(4.0, 10.0, uIntensity);
+        float slice = 6.2831853 / slices;
+        angle = mod(angle, slice);
+        angle = abs(angle - slice * 0.5);
+        p = vec2(cos(angle), sin(angle)) * radius;
+        uv = aspectRestore(p);
     }
 
     gl_FragColor = texture2D(uTexSampler, clamp(uv, vec2(0.0), vec2(1.0)));
