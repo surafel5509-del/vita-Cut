@@ -113,15 +113,24 @@ Navigation-Compose 2.8.5 · minSdk 26 / targetSdk 35.
 ./gradlew test          # unit tests (model, timeline, export planner, captions, AI, domain)
 ```
 
-Requires JDK 17 and the Android SDK (compileSdk 35). The Gradle wrapper is committed; first
-build downloads dependencies.
+Requires JDK 17 and the Android SDK (compileSdk 35).
+
+> **Wrapper bootstrap**: the repository ships `gradle/wrapper/gradle-wrapper.properties`
+> (Gradle 8.9) but not the binary `gradle-wrapper.jar`. On a machine with Gradle installed,
+> run `gradle wrapper` once to generate `gradlew` / `gradlew.bat` and the jar, then use
+> `./gradlew` as usual. Android Studio generates the wrapper automatically on first sync.
 
 ## Testing
 
 - **Unit tests** (pure JVM): project serialization, timeline engine ops, speed math, snapping &
   keyframes, export planner, caption editing / subtitle import, audio analyzers, AI edit use cases.
-- **Instrumentation/UI tests**: run on a device or emulator via
-  `./gradlew connectedAndroidTest`.
+- **Instrumentation tests** (device/emulator via `./gradlew connectedAndroidTest`):
+  - `core:database` — Room DAO contracts: autosave pending/commit flow, crash-recovery query,
+    export record lifecycle.
+  - `core:designsystem` — Compose UI tests for the shared component kit (buttons, chip rows,
+    sliders, empty/error states) inside `VitaTheme`.
+  - `app` — end-to-end localization check: sample strings resolve in all 8 locales, translations
+    genuinely differ from English, and unknown message keys degrade safely via `VitaStrings`.
 
 ## Project status
 
