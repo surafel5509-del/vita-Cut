@@ -39,15 +39,15 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
         with:
-          packages: 
+          packages: | 
              - platform-tools
              - platforms;android-34
              - build-tools;34.0.0
       
-      - name: Set up Gradle 9.3.1
+      - name: Set up Gradle 9.1.1
         uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: "9.3.1"
+          gradle-version: "9.1.1"
 
       - name: Fix gradlew permissions and line endings
         run: |
