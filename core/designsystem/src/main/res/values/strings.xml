@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App-wide UI strings (base locale: English). Every user-visible string in the app is
+         declared here or in a core module; translations live in values-<locale> siblings. -->
+
+    <!-- Brand -->
+    <string name="app_name">Vita Cut</string>
+    <string name="app_tagline">Create. Edit. Inspire.</string>
+
+    <!-- Common -->
+    <string name="action_cancel">Cancel</string>
+    <string name="action_ok">OK</string>
+    <string name="action_save">Save</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_rename">Rename</string>
+    <string name="action_duplicate">Duplicate</string>
+    <string name="action_retry">Try again</string>
+    <string name="action_close">Close</string>
+    <string name="action_apply">Apply</string>
+    <string name="action_back">Back</string>
+    <string name="action_share">Share</string>
+    <string name="action_undo">Undo</string>
+    <string name="action_redo">Redo</string>
+    <string name="action_reset">Reset</string>
+    <string name="action_done">Done</string>
+
+    <!-- Home -->
+    <string name="home_title">Projects</string>
+    <string name="home_new_project">New project</string>
+    <string name="home_templates">Templates</string>
+    <string name="home_settings">Settings</string>
+    <string name="home_search_hint">Search projects</string>
+    <string name="home_empty_title">No projects yet</string>
+    <string name="home_empty_message">Create your first project or start from a template.</string>
+    <string name="home_project_menu">Project options</string>
+    <string name="home_duration_format">%1$s · %2$s</string>
+    <string name="home_delete_title">Delete project?</string>
+    <string name="home_delete_message">“%1$s” will be permanently removed. Exported videos stay in your gallery.</string>
+    <string name="home_duplicate_name">%1$s (copy)</string>
+    <string name="home_new_project_title">New project</string>
+    <string name="home_project_name_hint">Project name</string>
+    <string name="home_aspect_ratio">Aspect ratio</string>
+    <string name="home_recovery_title">Unsaved changes found</string>
+    <string name="home_recovery_message">“%1$s” has an autosaved snapshot newer than the last save. Restore it?</string>
+    <string name="home_recovery_keep">Restore edits</string>
+    <string name="home_recovery_discard">Discard edits</string>
+
+    <!-- Editor: transport & chrome -->
+    <string name="editor_title">Editor</string>
+    <string name="editor_export">Export</string>
+    <string name="editor_play">Play</string>
+    <string name="editor_pause">Pause</string>
+    <string name="editor_timeline">Timeline</string>
+    <string name="editor_no_clip_selected">Select a clip to edit</string>
+    <string name="editor_saved">Project saved</string>
+    <string name="editor_saving">Saving…</string>
+    <string name="editor_loading">Opening project…</string>
+    <string name="editor_discard_changes_title">Discard changes?</string>
+    <string name="editor_discard_changes_message">Save the project before leaving?</string>
+    <string name="editor_empty_timeline">Timeline is empty</string>
+    <string name="editor_empty_timeline_message">Add photos or videos to start editing.</string>
+
+    <!-- Editor: media import -->
+    <string name="editor_add_media">Add media</string>
+    <string name="editor_add_video">Video</string>
+    <string name="editor_add_photo">Photo</string>
+    <string name="editor_record_voiceover">Voiceover</string>
+    <string name="editor_add_music">Audio</string>
+    <string name="editor_recording">Recording… tap to stop</string>
+    <string name="editor_record_permission">Microphone permission is needed to record.</string>
+
+    <!-- Editor: tools -->
+    <string name="tool_edit">Edit</string>
+    <string name="tool_audio">Audio</string>
+    <string name="tool_speed">Speed</string>
+    <string name="tool_split">Split</string>
+    <string name="tool_delete_clip">Delete</string>
+    <string name="tool_duplicate_clip">Duplicate</string>
+    <string name="tool_reverse">Reverse</string>
+    <string name="tool_reversing">Preparing reversed clip…</string>
+    <string name="tool_freeze_frame">Freeze frame</string>
+    <string name="tool_detach_audio">Detach audio</string>
+    <string name="tool_volume">Volume</string>
+    <string name="tool_fade_in">Fade in</string>
+    <string name="tool_fade_out">Fade out</string>
+    <string name="tool_speed_value">%1$.2f×</string>
+    <string name="tool_speed_curves">Speed curve</string>
+    <string name="tool_curve_normal">Constant</string>
+    <string name="tool_curve_montage">Montage</string>
+    <string name="tool_curve_bullet">Bullet</string>
+    <string name="tool_curve_hero">Hero</string>
+    <string name="tool_curve_jumpcut">Jump cut</string>
+    <string name="tool_curve_flash_in">Flash in</string>
+    <string name="tool_curve_flash_out">Flash out</string>
+    <string name="tool_curve_custom">Custom</string>
+
+    <string name="tool_text">Text</string>
+    <string name="tool_text_hint">Type something…</string>
+    <string name="tool_text_style">Style</string>
+    <string name="tool_text_animation">Animation</string>
+    <string name="tool_sticker">Sticker</string>
+    <string name="tool_overlay">Overlay</string>
+    <string name="tool_pip">Picture in picture</string>
+
+    <string name="tool_transition">Transition</string>
+    <string name="tool_transition_none">None</string>
+    <string name="tool_effects">Effects</string>
+    <string name="tool_filters">Filters</string>
+    <string name="tool_intensity">Intensity</string>
+    <string name="tool_adjust">Adjust</string>
+    <string name="tool_keyframe_add">Add keyframe</string>
+    <string name="tool_keyframe_remove">Remove keyframe</string>
+
+    <string name="tool_canvas">Canvas</string>
+    <string name="tool_canvas_ratio">Ratio</string>
+    <string name="tool_canvas_background">Background</string>
+    <string name="tool_bg_black">Black</string>
+    <string name="tool_bg_white">White</string>
+    <string name="tool_bg_blur">Blur fill</string>
+    <string name="tool_bg_gradient">Gradient</string>
+    <string name="tool_bg_color">Color</string>
+
+    <string name="tool_mask">Mask</string>
+    <string name="tool_chroma_key">Chroma key</string>
+    <string name="tool_chroma_pick">Pick key color</string>
+    <string name="tool_tracking">Motion tracking</string>
+    <string name="tool_tracking_running">Tracking… %1$d%%</string>
+    <string name="tool_transform">Transform</string>
+    <string name="tool_opacity">Opacity</string>
+    <string name="tool_blend_mode">Blend</string>
+
+    <!-- Color grading -->
+    <string name="grade_brightness">Brightness</string>
+    <string name="grade_exposure">Exposure</string>
+    <string name="grade_contrast">Contrast</string>
+    <string name="grade_saturation">Saturation</string>
+    <string name="grade_vibrance">Vibrance</string>
+    <string name="grade_temperature">Temperature</string>
+    <string name="grade_tint">Tint</string>
+    <string name="grade_highlights">Highlights</string>
+    <string name="grade_shadows">Shadows</string>
+    <string name="grade_whites">Whites</string>
+    <string name="grade_blacks">Blacks</string>
+    <string name="grade_sharpness">Sharpness</string>
+    <string name="grade_clarity">Clarity</string>
+    <string name="grade_vignette">Vignette</string>
+    <string name="grade_fade">Fade</string>
+    <string name="grade_grain">Grain</string>
+    <string name="grade_curves">Curves</string>
+    <string name="grade_hsl">HSL</string>
+    <string name="grade_lut">LUT</string>
+    <string name="grade_presets">Presets</string>
+    <string name="grade_save_preset">Save preset</string>
+
+    <!-- Captions -->
+    <string name="captions_title">Captions</string>
+    <string name="captions_auto">Auto captions</string>
+    <string name="captions_generating">Generating captions…</string>
+    <string name="captions_review_hint">Review &amp; type</string>
+    <string name="captions_style">Style</string>
+    <string name="captions_animation">Animation</string>
+    <string name="captions_position">Position</string>
+    <string name="captions_export_srt">Export .srt</string>
+    <string name="captions_export_vtt">Export .vtt</string>
+    <string name="captions_import">Import subtitles</string>
+    <string name="captions_dictate">Speak caption text</string>
+    <string name="captions_engine_assisted">Assisted (offline)</string>
+    <string name="captions_dictation_unavailable">Voice input is not available on this device.</string>
+    <string name="captions_dictation_offline">Voice input needs a network connection.</string>
+    <string name="captions_dictation_no_match">Didn’t catch that — try again.</string>
+    <string name="captions_no_speech_detected">No speech detected in this clip.</string>
+    <string name="captions_engine_unavailable">No caption engine available.</string>
+    <string name="captions_karaoke">Karaoke highlight</string>
+
+    <!-- AI -->
+    <string name="ai_title">Smart tools</string>
+    <string name="ai_auto_reframe">Auto reframe</string>
+    <string name="ai_remove_bg">Remove background</string>
+    <string name="ai_remove_silence">Remove silences</string>
+    <string name="ai_beat_sync">Beat sync</string>
+    <string name="ai_auto_cut">Auto cut</string>
+    <string name="ai_detect_objects">Detect objects</string>
+    <string name="ai_analyzing">Analyzing…</string>
+    <string name="ai_requires_play_services">This feature needs Google Play services. Install or update it to continue.</string>
+    <string name="ai_detection_failed">Object detection failed on this image.</string>
+    <string name="ai_segmentation_failed">Background removal failed. Try another photo.</string>
+    <string name="ai_silence_found">Found %1$s of silence.</string>
+    <string name="ai_no_silence_found">No long silences found.</string>
+    <string name="ai_beats_found">Beat grid ready · %1$.0f BPM</string>
+    <string name="ai_beats_not_found">No steady beat detected — using even cuts.</string>
+    <string name="ai_reframe_applied">Reframe path applied — fine-tune with keyframes.</string>
+    <string name="ai_bg_removed">Background removed. Added as an overlay.</string>
+    <string name="ai_autocut_applied">Auto cut applied (%1$d cuts).</string>
+    <string name="ai_objects_found">Found %1$d objects in this frame.</string>
+    <string name="media_importing">Importing media…</string>
+
+    <!-- Export -->
+    <string name="export_title">Export</string>
+    <string name="export_resolution">Resolution</string>
+    <string name="export_frame_rate">Frame rate</string>
+    <string name="export_bitrate">Bitrate</string>
+    <string name="export_bitrate_low">Low (smaller file)</string>
+    <string name="export_bitrate_medium">Medium (balanced)</string>
+    <string name="export_bitrate_high">High (best quality)</string>
+    <string name="export_bitrate_custom">Custom</string>
+    <string name="export_codec">Codec</string>
+    <string name="export_audio_bitrate">Audio bitrate</string>
+    <string name="export_estimate">Estimated size: %1$s</string>
+    <string name="export_start">Export video</string>
+    <string name="export_running">Exporting… %1$d%%</string>
+    <string name="export_eta">About %1$s left</string>
+    <string name="export_completed">Export complete</string>
+    <string name="export_open_file">Open</string>
+    <string name="export_share">Share</string>
+    <string name="export_cancel">Cancel export</string>
+    <string name="export_background_hint">Export continues in the background — you can leave this screen.</string>
+    <string name="export_destination">Export location</string>
+    <string name="export_destination_default">Gallery (Movies/VitaCut)</string>
+    <string name="export_destination_custom">Custom folder</string>
+    <string name="export_history">Export history</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_appearance">Appearance</string>
+    <string name="settings_theme">Theme</string>
+    <string name="settings_theme_dark">Dark</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_system">Follow system</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_language_system">System default</string>
+    <string name="settings_performance">Performance</string>
+    <string name="settings_performance_mode">Performance mode</string>
+    <string name="settings_performance_auto">Auto (device-based)</string>
+    <string name="settings_performance_high">High quality</string>
+    <string name="settings_performance_balanced">Balanced</string>
+    <string name="settings_performance_battery">Battery saver</string>
+    <string name="settings_hardware_acceleration">Hardware acceleration</string>
+    <string name="settings_proxy_media">Proxy media for large files</string>
+    <string name="settings_autosave">Autosave</string>
+    <string name="settings_autosave_interval">Autosave interval: %1$d s</string>
+    <string name="settings_reduced_motion">Reduce motion</string>
+    <string name="settings_notifications">Notifications</string>
+    <string name="settings_haptics">Haptic feedback</string>
+    <string name="settings_storage">Storage</string>
+    <string name="settings_clear_cache">Clear cache</string>
+    <string name="settings_cache_cleared">Cache cleared (%1$s freed)</string>
+    <string name="settings_about">About</string>
+    <string name="settings_privacy">Privacy</string>
+    <string name="settings_privacy_summary">All editing happens on your device. Vita Cut has no accounts, no analytics and never uploads your media.</string>
+    <string name="settings_version">Version %1$s</string>
+    <string name="settings_export_defaults">Default export settings</string>
+
+    <!-- Templates -->
+    <string name="templates_title">Templates</string>
+    <string name="templates_use">Use template</string>
+    <string name="templates_favorite">Favorite</string>
+    <string name="templates_save_current">Save current project as template</string>
+    <string name="templates_empty">No templates yet</string>
+    <string name="template_reel_quick">Quick Reel</string>
+    <string name="template_reel_quick_desc">Four punchy clips with fades and a title card — 9:16.</string>
+    <string name="template_travel_montage">Travel Montage</string>
+    <string name="template_travel_montage_desc">Cinematic 16:9 montage with slides and teal-orange grade.</string>
+    <string name="template_beat_drop">Beat Drop</string>
+    <string name="template_beat_drop_desc">Fast glitch-cut short built for music — 9:16.</string>
+    <string name="template_text_title_default">Your title here</string>
+    <string name="template_text_follow_default">Follow for more</string>
+
+    <!-- Errors (shared) -->
+    <string name="error_unknown">Something went wrong. Please try again.</string>
+    <string name="error_unsupported_media">This file format isn’t supported.</string>
+    <string name="error_corrupt_media">This file seems damaged and can’t be opened.</string>
+    <string name="error_permission_denied">Permission denied.</string>
+    <string name="error_project_unreadable">This project could not be opened.</string>
+    <string name="error_generic_media">Couldn’t load this media file.</string>
+
+    <!-- Accessibility -->
+    <string name="a11y_preview">Video preview</string>
+    <string name="a11y_playhead">Playhead — drag to scrub</string>
+    <string name="a11y_clip">Clip on %1$s track</string>
+    <string name="a11y_trim_handle">Trim handle</string>
+    <string name="a11y_zoom_timeline">Pinch to zoom the timeline</string>
+    <string name="a11y_waveform">Audio waveform</string>
+</resources>

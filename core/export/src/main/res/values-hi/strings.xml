@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="export_channel_name">वीडियो निर्यात</string>
+    <string name="export_notification_title">आपका वीडियो निर्यात हो रहा है</string>
+    <string name="export_progress_notification">%1$d%% पूर्ण</string>
+    <string name="error_export_failed">निर्यात विफल रहा। कृपया फिर कोशिश करें।</string>
+    <string name="error_insufficient_storage">इस वीडियो को निर्यात करने के लिए पर्याप्त संग्रहण नहीं है।</string>
+    <string name="error_file_missing">इस प्रोजेक्ट की कोई मीडिया फ़ाइल गायब है या स्थानांतरित कर दी गई है।</string>
+    <string name="export_error_no_tracks">टाइमलाइन खाली है — निर्यात से पहले क्लिप जोड़ें।</string>
+    <string name="export_error_unsupported_codec">यह डिवाइस चुने गए कोडेक से निर्यात नहीं कर सकता। H.264 आज़माएँ।</string>
+    <string name="export_error_decoder">मीडिया डिकोडर शुरू नहीं हो सका। फ़ाइल क्षतिग्रस्त या असंगत हो सकती है।</string>
+    <string name="export_error_encoder">वीडियो एनकोडर शुरू नहीं हो सका। कम रेज़ोल्यूशन या फ़्रेम दर आज़माएँ।</string>
+    <string name="export_error_empty_timeline">निर्यात करने के लिए कुछ नहीं — टाइमलाइन खाली है।</string>
+    <string name="export_fallback_hevc">इस डिवाइस पर H.265 समर्थित नहीं है — H.264 में निर्यात हो रहा है।</string>
+    <string name="export_fallback_resolution">यह रेज़ोल्यूशन डिवाइस एनकोडर सीमा से अधिक है — कम रेज़ोल्यूशन चुना गया।</string>
+    <string name="export_fallback_fps">इस डिवाइस पर 60 fps एन्कोडिंग समर्थित नहीं है — 30 fps पर निर्यात हो रहा है।</string>
+</resources>

@@ -1,0 +1,17 @@
+{
+  "id": "bundled-beat-drop",
+  "nameKey": "template_beat_drop",
+  "category": "TIKTOK",
+  "canvas": { "aspectRatio": "RATIO_9_16", "customWidth": 1080, "customHeight": 1920 },
+  "frameRate": 30.0,
+  "slots": [
+    { "order": 0, "kind": "MEDIA", "durationUs": 1800000, "transitionOut": "GLITCH_IN", "transitionDurationUs": 300000 },
+    { "order": 1, "kind": "MEDIA", "durationUs": 1800000, "transitionOut": "GLITCH_IN", "transitionDurationUs": 300000 },
+    { "order": 2, "kind": "MEDIA", "durationUs": 1800000, "transitionOut": "ZOOM_IN", "transitionDurationUs": 300000 },
+    { "order": 3, "kind": "MEDIA", "durationUs": 1800000, "transitionOut": "GLITCH_IN", "transitionDurationUs": 300000 },
+    { "order": 4, "kind": "MEDIA", "durationUs": 2400000 },
+    { "order": 5, "kind": "TEXT", "durationUs": 2000000, "textKey": "template_text_follow_default" }
+  ],
+  "thumbnailKey": "template_beat_drop",
+  "descriptionKey": "template_beat_drop_desc"
+}

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="export_channel_name">Exportações de vídeo</string>
+    <string name="export_notification_title">Exportando seu vídeo</string>
+    <string name="export_progress_notification">%1$d%% concluído</string>
+    <string name="error_export_failed">Falha na exportação. Tente novamente.</string>
+    <string name="error_insufficient_storage">Espaço livre insuficiente para exportar este vídeo.</string>
+    <string name="error_file_missing">Um arquivo de mídia deste projeto está ausente ou foi movido.</string>
+    <string name="export_error_no_tracks">A linha do tempo está vazia — adicione um clipe antes de exportar.</string>
+    <string name="export_error_unsupported_codec">Este dispositivo não pode exportar com o codec selecionado. Tente H.264.</string>
+    <string name="export_error_decoder">Um decodificador de mídia falhou ao iniciar. O arquivo pode estar danificado ou não ser compatível.</string>
+    <string name="export_error_encoder">O codificador de vídeo falhou ao iniciar. Tente uma resolução ou taxa de quadros menor.</string>
+    <string name="export_error_empty_timeline">Nada para exportar — a linha do tempo está vazia.</string>
+    <string name="export_fallback_hevc">H.265 não é compatível com este dispositivo — exportando como H.264.</string>
+    <string name="export_fallback_resolution">Esta resolução excede os limites do codificador — uma resolução menor foi selecionada.</string>
+    <string name="export_fallback_fps">A codificação a 60 fps não é compatível com este dispositivo — exportando a 30 fps.</string>
+</resources>

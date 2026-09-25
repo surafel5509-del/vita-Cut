@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="export_channel_name">صادرات الفيديو</string>
+    <string name="export_notification_title">جارٍ تصدير الفيديو</string>
+    <string name="export_progress_notification">اكتمل %1$d%%</string>
+    <string name="error_export_failed">فشل التصدير. يرجى المحاولة مجددًا.</string>
+    <string name="error_insufficient_storage">لا توجد مساحة تخزين كافية لتصدير هذا الفيديو.</string>
+    <string name="error_file_missing">ملف وسائط مستخدم في هذا المشروع مفقود أو تم نقله.</string>
+    <string name="export_error_no_tracks">الخط الزمني فارغ — أضف مقطعًا قبل التصدير.</string>
+    <string name="export_error_unsupported_codec">لا يستطيع هذا الجهاز التصدير بالترميز المحدد. جرّب H.264.</string>
+    <string name="export_error_decoder">فشل بدء تشغيل مفكك ترميز الوسائط. قد يكون الملف تالفًا أو غير مدعوم.</string>
+    <string name="export_error_encoder">فشل بدء تشغيل مُرمِّز الفيديو. جرّب دقة أو معدل إطارات أقل.</string>
+    <string name="export_error_empty_timeline">لا يوجد ما يُصدَّر — الخط الزمني فارغ.</string>
+    <string name="export_fallback_hevc">H.265 غير مدعوم على هذا الجهاز — يتم التصدير بصيغة H.264.</string>
+    <string name="export_fallback_resolution">تتجاوز هذه الدقة حدود مُرمِّز الجهاز — تم اختيار دقة أقل.</string>
+    <string name="export_fallback_fps">ترميز 60 إطارًا/ث غير مدعوم على هذا الجهاز — يتم التصدير بمعدل 30 إطارًا/ث.</string>
+</resources>

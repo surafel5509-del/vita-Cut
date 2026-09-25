@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Export module strings. Translations live in the matching values-<locale> folders; the
+         app module ships the full 9-locale set (en, am, ar, fr, es, pt, zh, hi). -->
+    <string name="export_channel_name">Video exports</string>
+    <string name="export_notification_title">Exporting your video</string>
+    <string name="export_progress_notification">%1$d%% complete</string>
+
+    <!-- Error/fallback message keys surfaced by ExportState (resolved by the app UI layer). -->
+    <string name="error_export_failed">Export failed. Please try again.</string>
+    <string name="error_insufficient_storage">Not enough free storage to export this video.</string>
+    <string name="error_file_missing">A media file used in this project is missing or was moved.</string>
+    <string name="export_error_no_tracks">The timeline is empty — add a clip before exporting.</string>
+    <string name="export_error_unsupported_codec">This device cannot export with the selected codec. Try H.264.</string>
+    <string name="export_error_decoder">A media decoder failed to start. The file may be damaged or unsupported.</string>
+    <string name="export_error_encoder">The video encoder failed to start. Try a lower resolution or frame rate.</string>
+    <string name="export_error_empty_timeline">Nothing to export — the timeline is empty.</string>
+    <string name="export_fallback_hevc">H.265 is not supported on this device — exporting as H.264.</string>
+    <string name="export_fallback_resolution">This resolution exceeds the device encoder limits — a lower resolution was selected.</string>
+    <string name="export_fallback_fps">60 fps encoding is not supported on this device — exporting at 30 fps.</string>
+</resources>

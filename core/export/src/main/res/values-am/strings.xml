@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="export_channel_name">የቪዲዮ ልኬቶች</string>
+    <string name="export_notification_title">ቪዲዮህ በመላክ ላይ</string>
+    <string name="export_progress_notification">%1$d%% ተጠናቅቋል</string>
+    <string name="error_export_failed">መላክ አልተሳካም። እባክህ እንደገና ሞክር።</string>
+    <string name="error_insufficient_storage">ይህን ቪዲዮ ለመላክ በቂ ነጻ ማከማቻ የለም።</string>
+    <string name="error_file_missing">በዚህ ፕሮጀክት ውስጥ ጥቅም ላይ የዋለ ሚዲያ ፋይል ጠፍቷል ወይም ተዛውሯል።</string>
+    <string name="export_error_no_tracks">የጊዜ መስመሩ ባዶ ነው — ከመላክህ በፊት ቅንጭብ ጨምር።</string>
+    <string name="export_error_unsupported_codec">ይህ መሣሪያ በተመረጠው ኮዴክ መላክ አይችልም። H.264 ሞክር።</string>
+    <string name="export_error_decoder">የሚዲያ ዲኮደር መጀመር አልቻለም። ፋይሉ የተበላሸ ወይም ያልተደገፈ ሊሆን ይችላል።</string>
+    <string name="export_error_encoder">የቪዲዮ ኢንኮደር መጀመር አልቻለም። ዝቅተኛ ጥራት ወይም የፍሬም ፍጥነት ሞክር።</string>
+    <string name="export_error_empty_timeline">የሚላክ ነገር የለም — የጊዜ መስመሩ ባዶ ነው።</string>
+    <string name="export_fallback_hevc">በዚህ መሣሪያ H.265 አይደገፍም — በH.264 በመላክ ላይ።</string>
+    <string name="export_fallback_resolution">ይህ ጥራት ከመሣሪያው ኢንኮደር ገደብ በላይ ነው — ዝቅተኛ ጥራት ተመርጧል።</string>
+    <string name="export_fallback_fps">የ60 fps ኢንኮዲንግ በዚህ መሣሪያ አይደገፍም — በ30 fps በመላክ ላይ።</string>
+</resources>

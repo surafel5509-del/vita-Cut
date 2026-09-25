@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="export_channel_name">Exportations vidéo</string>
+    <string name="export_notification_title">Exportation de votre vidéo</string>
+    <string name="export_progress_notification">%1$d%% terminé</string>
+    <string name="error_export_failed">Échec de l\'exportation. Veuillez réessayer.</string>
+    <string name="error_insufficient_storage">Espace de stockage insuffisant pour exporter cette vidéo.</string>
+    <string name="error_file_missing">Un fichier média de ce projet est manquant ou a été déplacé.</string>
+    <string name="export_error_no_tracks">La chronologie est vide — ajoutez un clip avant d\'exporter.</string>
+    <string name="export_error_unsupported_codec">Cet appareil ne peut pas exporter avec le codec choisi. Essayez H.264.</string>
+    <string name="export_error_decoder">Un décodeur média n\'a pas pu démarrer. Le fichier est peut-être endommagé ou non pris en charge.</string>
+    <string name="export_error_encoder">L\'encodeur vidéo n\'a pas pu démarrer. Essayez une résolution ou une fréquence d\'images inférieure.</string>
+    <string name="export_error_empty_timeline">Rien à exporter — la chronologie est vide.</string>
+    <string name="export_fallback_hevc">H.265 n\'est pas pris en charge sur cet appareil — export en H.264.</string>
+    <string name="export_fallback_resolution">Cette résolution dépasse les limites de l\'encodeur — une résolution inférieure a été choisie.</string>
+    <string name="export_fallback_fps">L\'encodage à 60 ips n\'est pas pris en charge sur cet appareil — export à 30 ips.</string>
+</resources>

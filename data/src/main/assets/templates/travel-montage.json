@@ -1,0 +1,18 @@
+{
+  "id": "bundled-travel-montage",
+  "nameKey": "template_travel_montage",
+  "category": "TRAVEL",
+  "canvas": { "aspectRatio": "RATIO_16_9", "customWidth": 1920, "customHeight": 1080 },
+  "frameRate": 30.0,
+  "slots": [
+    { "order": 0, "kind": "TEXT", "durationUs": 2500000, "textKey": "template_text_title_default" },
+    { "order": 1, "kind": "MEDIA", "durationUs": 2200000, "transitionOut": "SLIDE", "transitionDurationUs": 500000, "suggestedFilterId": "teal-orange" },
+    { "order": 2, "kind": "MEDIA", "durationUs": 2200000, "transitionOut": "SLIDE", "transitionDurationUs": 500000, "suggestedFilterId": "teal-orange" },
+    { "order": 3, "kind": "MEDIA", "durationUs": 2200000, "transitionOut": "DISSOLVE_TO_BLACK", "transitionDurationUs": 600000, "suggestedFilterId": "teal-orange" },
+    { "order": 4, "kind": "MEDIA", "durationUs": 2200000, "transitionOut": "SLIDE", "transitionDurationUs": 500000, "suggestedFilterId": "teal-orange" },
+    { "order": 5, "kind": "MEDIA", "durationUs": 2200000, "transitionOut": "FADE", "transitionDurationUs": 700000, "suggestedFilterId": "teal-orange" },
+    { "order": 6, "kind": "MEDIA", "durationUs": 3000000, "suggestedFilterId": "teal-orange" }
+  ],
+  "thumbnailKey": "template_travel_montage",
+  "descriptionKey": "template_travel_montage_desc"
+}
