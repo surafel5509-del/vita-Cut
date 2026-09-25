@@ -84,7 +84,7 @@ core/export            – Transformer-based export worker, planner, storage gua
 core/captions          – transcription registry, caption editor, SRT/VTT import-export
 core/ai                – audio analyzers, object detection, subject segmentation,
                          motion tracking, auto-reframe, beat detection
-core/designsystem      – Vita* components, dark-first theme, ALL localized strings (9 locales)
+core/designsystem      – Vita* components, dark-first theme, ALL localized strings (8 locales)
 ```
 
 Key decisions:
