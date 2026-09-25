@@ -115,10 +115,12 @@ Navigation-Compose 2.8.5 · minSdk 26 / targetSdk 35.
 
 Requires JDK 17 and the Android SDK (compileSdk 35).
 
-> **Wrapper bootstrap**: the repository ships `gradle/wrapper/gradle-wrapper.properties`
-> (Gradle 8.9) but not the binary `gradle-wrapper.jar`. On a machine with Gradle installed,
-> run `gradle wrapper` once to generate `gradlew` / `gradlew.bat` and the jar, then use
-> `./gradlew` as usual. Android Studio generates the wrapper automatically on first sync.
+> **Wrapper bootstrap**: the repository ships `gradlew` / `gradlew.bat` and
+> `gradle/wrapper/gradle-wrapper.properties` (Gradle 8.9). The binary
+> `gradle/wrapper/gradle-wrapper.jar` is not committed (per `.gitignore` practices for binary
+> blobs) — it is downloaded automatically on first `./gradlew` invocation, or generated via
+> `gradle wrapper` if you have Gradle installed locally. Android Studio also generates it on
+> first sync.
 
 ## Testing
 
