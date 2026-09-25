@@ -67,7 +67,21 @@ jobs:
           grep -q "gradle-8.9" gradle/wrapper/gradle-wrapper.properties
 
       - name: Build debug APK
-        run: ./gradlew :app:assembleDebug --stacktrace --no-daemon
+        run: |
+          set -o pipefail
+          echo "JAVA_HOME=$JAVA_HOME"
+          echo "ANDROID_HOME=${ANDROID_HOME:-$ANDROID_SDK_ROOT}"
+          java -version
+          ./gradlew :app:assembleDebug --stacktrace --no-daemon 2>&1 | tee gradle-assemble.log
+          EXIT=${PIPESTATUS[0]}
+          if [ "$EXIT" -ne 0 ]; then
+            echo "## Gradle assembleDebug failed" >> "$GITHUB_STEP_SUMMARY"
+            tail -n 60 gradle-assemble.log >> "$GITHUB_STEP_SUMMARY"
+            tail -n 40 gradle-assemble.log | while IFS= read -r line; do
+              echo "::error::$line"
+            done
+          fi
+          exit "$EXIT"
 
       - name: Verify APK exists and is complete
         run: |

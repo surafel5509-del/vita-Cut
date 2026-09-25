@@ -32,14 +32,6 @@ object FilterLibrary {
         grading = Grading(adjustments = adjustments, curves = curves, hsl = hsl),
     )
 
-    /** Overload so looks that only tweak HSL don't have to pass identity curves. */
-    private fun filter(
-        id: String,
-        category: FilterCategory,
-        adjustments: ColorAdjustments,
-        hsl: HslAdjustments,
-    ) = filter(id, category, adjustments, ToneCurves.DEFAULT, hsl)
-
     /** S-curve helper for punchy filmic looks. */
     private fun sCurve(strength: Float) = ToneCurves(
         rgb = listOf(
@@ -60,7 +52,7 @@ object FilterLibrary {
             "teal-orange", FilterCategory.CINEMATIC,
             ColorAdjustments(contrast = 0.18f, saturation = 0.1f, temperature = 0.08f, highlights = -0.1f, shadows = 0.06f, fade = 0.08f),
             sCurve(1f),
-            hsl(
+            hsl = hsl(
                 HslBand.CYAN to HslBandAdjustment(hueDegrees = 8f, saturation = 0.15f),
                 HslBand.BLUE to HslBandAdjustment(hueDegrees = -10f, saturation = 0.1f),
                 HslBand.ORANGE to HslBandAdjustment(saturation = 0.18f, luminance = 0.05f),
@@ -85,24 +77,24 @@ object FilterLibrary {
         filter(
             "skin-glow", FilterCategory.PORTRAIT,
             ColorAdjustments(brightness = 0.05f, contrast = 0.04f, saturation = 0.06f, temperature = 0.05f, sharpen = 0.08f),
-            hsl(HslBand.ORANGE to HslBandAdjustment(luminance = 0.08f, saturation = -0.06f)),
+            hsl = hsl(HslBand.ORANGE to HslBandAdjustment(luminance = 0.08f, saturation = -0.06f)),
         ),
         filter(
             "porcelain", FilterCategory.PORTRAIT,
             ColorAdjustments(brightness = 0.08f, contrast = -0.05f, saturation = -0.12f, fade = 0.1f),
-            hsl(HslBand.ORANGE to HslBandAdjustment(luminance = 0.1f)),
+            hsl = hsl(HslBand.ORANGE to HslBandAdjustment(luminance = 0.1f)),
         ),
         filter(
             "golden-hour", FilterCategory.PORTRAIT,
             ColorAdjustments(temperature = 0.22f, brightness = 0.04f, saturation = 0.12f, highlights = -0.06f),
-            hsl(HslBand.YELLOW to HslBandAdjustment(saturation = 0.15f)),
+            hsl = hsl(HslBand.YELLOW to HslBandAdjustment(saturation = 0.15f)),
         ),
 
         // Travel
         filter(
             "wanderlust", FilterCategory.TRAVEL,
             ColorAdjustments(contrast = 0.14f, saturation = 0.2f, vibrance = 0.25f, temperature = 0.05f, clarity = 0.15f),
-            hsl(
+            hsl = hsl(
                 HslBand.GREEN to HslBandAdjustment(hueDegrees = 10f, saturation = 0.1f),
                 HslBand.CYAN to HslBandAdjustment(saturation = 0.15f),
             ),
@@ -110,7 +102,7 @@ object FilterLibrary {
         filter(
             "coastal", FilterCategory.TRAVEL,
             ColorAdjustments(brightness = 0.05f, saturation = 0.1f, temperature = -0.06f, highlights = 0.05f),
-            hsl(HslBand.CYAN to HslBandAdjustment(luminance = 0.08f), HslBand.BLUE to HslBandAdjustment(saturation = 0.2f)),
+            hsl = hsl(HslBand.CYAN to HslBandAdjustment(luminance = 0.08f), HslBand.BLUE to HslBandAdjustment(saturation = 0.2f)),
         ),
         filter(
             "summit", FilterCategory.TRAVEL,
@@ -121,7 +113,7 @@ object FilterLibrary {
         filter(
             "appetite", FilterCategory.FOOD,
             ColorAdjustments(saturation = 0.22f, vibrance = 0.15f, temperature = 0.12f, contrast = 0.08f, sharpen = 0.12f),
-            hsl(HslBand.RED to HslBandAdjustment(saturation = 0.12f), HslBand.ORANGE to HslBandAdjustment(luminance = 0.06f)),
+            hsl = hsl(HslBand.RED to HslBandAdjustment(saturation = 0.12f), HslBand.ORANGE to HslBandAdjustment(luminance = 0.06f)),
         ),
         filter(
             "cafe-light", FilterCategory.FOOD,
@@ -171,7 +163,7 @@ object FilterLibrary {
         filter(
             "sunset-drive", FilterCategory.WARM,
             ColorAdjustments(temperature = 0.18f, tint = 0.06f, saturation = 0.15f, fade = 0.08f),
-            hsl(HslBand.MAGENTA to HslBandAdjustment(saturation = 0.15f)),
+            hsl = hsl(HslBand.MAGENTA to HslBandAdjustment(saturation = 0.15f)),
         ),
 
         // Cool
@@ -182,14 +174,14 @@ object FilterLibrary {
         filter(
             "midnight", FilterCategory.COOL,
             ColorAdjustments(temperature = -0.15f, tint = -0.05f, contrast = 0.15f, blacks = -0.15f, vignette = 0.25f),
-            hsl(HslBand.BLUE to HslBandAdjustment(saturation = 0.1f, luminance = -0.05f)),
+            hsl = hsl(HslBand.BLUE to HslBandAdjustment(saturation = 0.1f, luminance = -0.05f)),
         ),
 
         // Retro
         filter(
             "vhs-night", FilterCategory.RETRO,
             ColorAdjustments(saturation = 0.2f, contrast = 0.1f, temperature = -0.08f, grain = 0.25f),
-            hsl(HslBand.PURPLE to HslBandAdjustment(saturation = 0.2f), HslBand.MAGENTA to HslBandAdjustment(hueDegrees = -12f)),
+            hsl = hsl(HslBand.PURPLE to HslBandAdjustment(saturation = 0.2f), HslBand.MAGENTA to HslBandAdjustment(hueDegrees = -12f)),
         ),
         filter(
             "arcade", FilterCategory.RETRO,
@@ -246,7 +238,7 @@ object FilterLibrary {
         filter(
             "neon-tokyo", FilterCategory.STREET,
             ColorAdjustments(contrast = 0.18f, saturation = 0.28f, vibrance = 0.2f, temperature = -0.12f, blacks = -0.1f),
-            hsl(
+            hsl = hsl(
                 HslBand.MAGENTA to HslBandAdjustment(saturation = 0.22f),
                 HslBand.CYAN to HslBandAdjustment(saturation = 0.18f, luminance = 0.05f),
             ),
@@ -264,7 +256,7 @@ object FilterLibrary {
         filter(
             "aurora-dream", FilterCategory.FANTASY,
             ColorAdjustments(saturation = 0.18f, contrast = 0.08f, temperature = -0.08f, fade = 0.1f, highlights = 0.08f),
-            hsl(
+            hsl = hsl(
                 HslBand.GREEN to HslBandAdjustment(hueDegrees = 18f, saturation = 0.2f),
                 HslBand.PURPLE to HslBandAdjustment(saturation = 0.22f, luminance = 0.06f),
             ),
@@ -272,7 +264,7 @@ object FilterLibrary {
         filter(
             "candy", FilterCategory.FANTASY,
             ColorAdjustments(saturation = 0.32f, vibrance = 0.22f, brightness = 0.05f, contrast = 0.08f),
-            hsl(HslBand.MAGENTA to HslBandAdjustment(saturation = 0.18f), HslBand.RED to HslBandAdjustment(luminance = 0.05f)),
+            hsl = hsl(HslBand.MAGENTA to HslBandAdjustment(saturation = 0.18f), HslBand.RED to HslBandAdjustment(luminance = 0.05f)),
         ),
         filter(
             "moonlight", FilterCategory.FANTASY,
@@ -317,7 +309,7 @@ object FilterLibrary {
         filter(
             "soft-glam", FilterCategory.PORTRAIT,
             ColorAdjustments(brightness = 0.06f, contrast = -0.04f, saturation = 0.04f, temperature = 0.08f, highlights = 0.06f),
-            hsl(HslBand.ORANGE to HslBandAdjustment(luminance = 0.1f, saturation = -0.04f)),
+            hsl = hsl(HslBand.ORANGE to HslBandAdjustment(luminance = 0.1f, saturation = -0.04f)),
         ),
         filter(
             "desert-gold", FilterCategory.TRAVEL,
