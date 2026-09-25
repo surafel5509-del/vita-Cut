@@ -19,6 +19,9 @@ interface TemplateDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertAll(templates: List<TemplateEntity>)
 
+    @Query("SELECT * FROM templates WHERE template_id = :templateId LIMIT 1")
+    suspend fun findById(templateId: String): TemplateEntity?
+
     @Query("UPDATE templates SET is_favorite = :favorite WHERE template_id = :templateId")
     suspend fun setFavorite(templateId: String, favorite: Boolean)
 
@@ -27,4 +30,7 @@ interface TemplateDao {
             "WHERE template_id = :templateId",
     )
     suspend fun recordUse(templateId: String, nowMs: Long)
+
+    @Query("DELETE FROM templates WHERE template_id = :templateId")
+    suspend fun deleteById(templateId: String)
 }

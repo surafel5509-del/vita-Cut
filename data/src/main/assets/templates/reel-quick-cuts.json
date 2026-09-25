@@ -1,0 +1,16 @@
+{
+  "id": "bundled-reel-quick",
+  "nameKey": "template_reel_quick",
+  "category": "REELS",
+  "canvas": { "aspectRatio": "RATIO_9_16", "customWidth": 1080, "customHeight": 1920 },
+  "frameRate": 30.0,
+  "slots": [
+    { "order": 0, "kind": "MEDIA", "durationUs": 2000000, "transitionOut": "FADE", "transitionDurationUs": 400000 },
+    { "order": 1, "kind": "MEDIA", "durationUs": 2000000, "transitionOut": "ZOOM_IN", "transitionDurationUs": 400000 },
+    { "order": 2, "kind": "MEDIA", "durationUs": 2000000, "transitionOut": "FADE", "transitionDurationUs": 400000 },
+    { "order": 3, "kind": "MEDIA", "durationUs": 2000000 },
+    { "order": 4, "kind": "TEXT", "durationUs": 2500000, "textKey": "template_text_title_default" }
+  ],
+  "thumbnailKey": "template_reel_quick",
+  "descriptionKey": "template_reel_quick_desc"
+}

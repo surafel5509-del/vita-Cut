@@ -108,7 +108,11 @@ class ExportWorker @AssistedInject constructor(
         val terminal = exportEngine
             .export(request, resources.imageFrameSource(), resources.lutResolver())
             .onEach { state ->
-                if (state is ExportState.Running) setForegroundSafely(foregroundInfo(state.percent))
+                if (state is ExportState.Running) {
+                    setForegroundSafely(foregroundInfo(state.percent))
+                    // Observable by the UI through WorkManager's progress flow.
+                    runCatching { setProgressAsync(workDataOf(KEY_PROGRESS to state.percent)) }
+                }
             }
             .singleOrNull { it is ExportState.Succeeded || it is ExportState.Failed || it is ExportState.Cancelled }
 
@@ -232,6 +236,7 @@ class ExportWorker @AssistedInject constructor(
         const val KEY_TREE_URI = "tree_uri"
         const val KEY_OUTPUT_URI = "output_uri"
         const val KEY_OUTPUT_NAME = "output_name"
+        const val KEY_PROGRESS = "progress_percent"
         const val KEY_ERROR = "error"
         const val TAG = "vitacut_export_work"
 
