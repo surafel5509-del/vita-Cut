@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: debug-apk-${{ github.workflow }}-${{ github.ref }}
@@ -83,16 +83,39 @@ jobs:
           tail -n 80 gradle-assemble.log
           if [ "$EXIT" -ne 0 ]; then
             echo "## Gradle assembleDebug failed ($EXIT)" >> "$GITHUB_STEP_SUMMARY"
-            tail -n 80 gradle-assemble.log >> "$GITHUB_STEP_SUMMARY"
             python3 - <<'PY'
-          import pathlib
-          lines = pathlib.Path("gradle-assemble.log").read_text(errors="replace").splitlines()[-40:]
-          for line in lines:
-              safe = line.replace("%", "%25").replace("\r", "")
-              print(f"::error::{safe}")
+          from pathlib import Path
+          text = Path("gradle-assemble.log").read_text(errors="replace")
+          Path("gradle-assemble-tail.txt").write_text("\n".join(text.splitlines()[-120:]))
+          idx = text.find("FAILURE:")
+          if idx < 0:
+              idx = text.find("What went wrong")
+          chunk = text[idx:idx + 3500] if idx >= 0 else "\n".join(text.splitlines()[-60:])
+          Path("gradle-assemble-failure.txt").write_text(chunk)
+          print("----- FAILURE -----")
+          print(chunk)
+          safe = chunk.replace("%", "%25").replace("\r", "").replace("\n", "%0A")
+          print(f"::error title=assembleDebug::{safe}")
           PY
           fi
           exit "$EXIT"
+
+      - name: Publish Gradle failure
+        if: failure() && hashFiles('gradle-assemble-failure.txt') != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          {
+            echo "assembleDebug failed on ${GITHUB_SHA}"
+            echo
+            echo '```'
+            cat gradle-assemble-failure.txt
+            echo '```'
+          } > /tmp/fail-comment.md
+          gh api --method POST \
+            -H "Accept: application/vnd.github+json" \
+            "/repos/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}/comments" \
+            -f body="$(cat /tmp/fail-comment.md)"
 
       - name: Verify APK exists and is complete
         run: |
