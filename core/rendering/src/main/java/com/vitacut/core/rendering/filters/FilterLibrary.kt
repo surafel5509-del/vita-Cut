@@ -333,9 +333,9 @@ object FilterLibrary {
         ),
     )
 
-    private val byId = ALL.associateBy { it.id }
+    private val filtersById = ALL.associateBy { it.id }
 
-    fun byId(id: String?): FilterDefinition? = id?.let { byId[it] }
+    fun byId(id: String?): FilterDefinition? = id?.let { filtersById[it] }
 
     fun byCategory(category: FilterCategory): List<FilterDefinition> =
         ALL.filter { it.category == category }

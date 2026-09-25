@@ -86,11 +86,13 @@ jobs:
             python3 - <<'PY'
           from pathlib import Path
           text = Path("gradle-assemble.log").read_text(errors="replace")
-          Path("gradle-assemble-tail.txt").write_text("\n".join(text.splitlines()[-120:]))
+          lines = text.splitlines()
+          compiler = [ln for ln in lines if ln.startswith("e:") or "error:" in ln.lower() and "Note:" not in ln]
           idx = text.find("FAILURE:")
           if idx < 0:
               idx = text.find("What went wrong")
-          chunk = text[idx:idx + 3500] if idx >= 0 else "\n".join(text.splitlines()[-60:])
+          failure = text[idx:idx + 1800] if idx >= 0 else "\n".join(lines[-40:])
+          chunk = "\n".join(compiler[:40] + ["", failure])
           Path("gradle-assemble-failure.txt").write_text(chunk)
           print("----- FAILURE -----")
           print(chunk)

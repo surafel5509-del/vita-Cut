@@ -221,9 +221,9 @@ object TextStyleLibrary {
         ),
     )
 
-    private val byId = ALL.associateBy { it.id }
+    private val presetsById = ALL.associateBy { it.id }
 
-    fun byId(id: String): TextStylePreset? = byId[id]
+    fun byId(id: String): TextStylePreset? = presetsById[id]
 
     private fun preset(
         id: String,

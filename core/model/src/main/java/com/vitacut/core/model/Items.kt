@@ -114,7 +114,7 @@ data class TextStyle(
     val strokeColorArgb: Int = 0xFF000000.toInt(),
     /** Stroke width as fraction of text size; 0 disables stroke. */
     val strokeWidthFraction: Float = 0f,
-    val shadowColorArgb: Int = 0x80000000,
+    val shadowColorArgb: Int = 0x80000000.toInt(),
     val shadowRadiusFraction: Float = 0f,
     val shadowDxFraction: Float = 0f,
     val shadowDyFraction: Float = 0f,
