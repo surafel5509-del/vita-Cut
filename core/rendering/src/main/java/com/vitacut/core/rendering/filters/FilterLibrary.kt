@@ -4,7 +4,7 @@ import com.vitacut.core.model.ColorAdjustments
 import com.vitacut.core.model.CurvePoint
 import com.vitacut.core.model.FilterCategory
 import com.vitacut.core.model.FilterDefinition
-import com.vitacut.core.model.Grating
+import com.vitacut.core.model.Grading
 import com.vitacut.core.model.HslAdjustments
 import com.vitacut.core.model.HslBand
 import com.vitacut.core.model.HslBandAdjustment

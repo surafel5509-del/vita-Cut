@@ -7,7 +7,7 @@ import com.vitacut.core.model.CanvasSettings
 import com.vitacut.core.model.CropSettings
 import com.vitacut.core.model.EffectInstance
 import com.vitacut.core.model.FilterState
-import com.vitacut.core.model.Grating
+import com.vitacut.core.model.Grading
 import com.vitacut.core.model.ItemId
 import com.vitacut.core.model.MediaAsset
 import com.vitacut.core.model.Project
