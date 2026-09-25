@@ -32,6 +32,14 @@ object FilterLibrary {
         grading = Grading(adjustments = adjustments, curves = curves, hsl = hsl),
     )
 
+    /** Overload so looks that only tweak HSL don't have to pass identity curves. */
+    private fun filter(
+        id: String,
+        category: FilterCategory,
+        adjustments: ColorAdjustments,
+        hsl: HslAdjustments,
+    ) = filter(id, category, adjustments, ToneCurves.DEFAULT, hsl)
+
     /** S-curve helper for punchy filmic looks. */
     private fun sCurve(strength: Float) = ToneCurves(
         rgb = listOf(

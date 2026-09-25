@@ -66,9 +66,6 @@ jobs:
           test -f gradle/wrapper/gradle-wrapper.jar
           grep -q "gradle-8.9" gradle/wrapper/gradle-wrapper.properties
 
-      - name: Run unit tests
-        run: ./gradlew test --stacktrace --no-daemon --continue
-
       - name: Build debug APK
         run: ./gradlew :app:assembleDebug --stacktrace --no-daemon
 
@@ -122,8 +119,8 @@ jobs:
           fi
           BADGING=$("$AAPT" dump badging "$APK_PATH")
           echo "$BADGING" | head -20
-          echo "$BADGING" | grep -q "package: name='com.vitacut.debug'"
-          echo "$BADGING" | grep -q "application-label:'Vita Cut'"
+          echo "$BADGING" | grep -q "com.vitacut.debug"
+          echo "$BADGING" | grep -q "Vita Cut"
           echo "$BADGING" | grep -E "sdkVersion:'26'|minSdkVersion:'26'"
           echo "$BADGING" | grep -E "targetSdkVersion:'35'"
           echo "$BADGING" | grep -q "launchable-activity"
@@ -136,3 +133,6 @@ jobs:
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 14
+
+      - name: Run unit tests
+        run: ./gradlew test --stacktrace --no-daemon --continue

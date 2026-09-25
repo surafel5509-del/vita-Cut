@@ -28,7 +28,7 @@ import androidx.compose.material.icons.outlined.Colorize
 import androidx.compose.material.icons.outlined.ContentCut
 import androidx.compose.material.icons.outlined.Crop
 import androidx.compose.material.icons.outlined.EmojiEmotions
-import androidx.compose.material.icons.outlined.FilterCenterFocus
+import androidx.compose.material.icons.outlined.CenterFocusWeak
 import androidx.compose.material.icons.outlined.GraphicEq
 import androidx.compose.material.icons.outlined.Key
 import androidx.compose.material.icons.outlined.Layers
@@ -41,7 +41,7 @@ import androidx.compose.material.icons.outlined.TextFields
 import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.material.icons.outlined.Undo
 import androidx.compose.material.icons.outlined.Upload
-import androidx.compose.material.icons.outlined.Wallpaper
+import androidx.compose.material.icons.outlined.Videocam
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -347,8 +347,8 @@ private fun ToolRail(
         ToolEntry(EditorSheet.EFFECTS, Icons.Outlined.Star, R.string.tool_effects),
         ToolEntry(EditorSheet.FILTERS, Icons.Outlined.Colorize, R.string.tool_filters),
         ToolEntry(EditorSheet.ADJUST, Icons.Outlined.Tune, R.string.tool_adjust),
-        ToolEntry(EditorSheet.MASK, Icons.Outlined.FilterCenterFocus, R.string.tool_mask),
-        ToolEntry(EditorSheet.CHROMA, Icons.Outlined.Wallpaper, R.string.tool_chroma_key),
+        ToolEntry(EditorSheet.MASK, Icons.Outlined.CenterFocusWeak, R.string.tool_mask),
+        ToolEntry(EditorSheet.CHROMA, Icons.Outlined.Videocam, R.string.tool_chroma_key),
         ToolEntry(EditorSheet.CANVAS, Icons.Outlined.Crop, R.string.tool_canvas),
         ToolEntry(EditorSheet.CAPTIONS, Icons.Outlined.Caption, R.string.captions_title),
         ToolEntry(EditorSheet.AI, Icons.Outlined.AutoAwesome, R.string.ai_title),
