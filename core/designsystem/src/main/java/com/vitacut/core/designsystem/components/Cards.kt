@@ -1,6 +1,7 @@
 package com.vitacut.core.designsystem.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -25,16 +26,18 @@ fun VitaCard(
             shape = MaterialTheme.shapes.large,
             color = containerColor,
             border = border,
-            content = content,
-        )
+        ) {
+            Column(content = content)
+        }
     } else {
         Surface(
             modifier = modifier,
             shape = MaterialTheme.shapes.large,
             color = containerColor,
             border = border,
-            content = content,
-        )
+        ) {
+            Column(content = content)
+        }
     }
 }
 
@@ -52,6 +55,7 @@ fun VitaPanel(
         shape = MaterialTheme.shapes.extraLarge,
         color = MaterialTheme.colorScheme.surface,
         tonalElevation = 2.dp,
-        content = content,
-    )
+    ) {
+        Column(content = content)
+    }
 }
