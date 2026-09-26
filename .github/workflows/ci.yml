@@ -210,5 +210,18 @@ jobs:
           Path("gradle-test-failure.txt").write_text(chunk)
           print("----- TEST FAILURES -----")
           print(chunk)
+          safe = chunk.replace("%", "%25").replace("\r", "").replace("\n", "%0A")
+          print(f"::error title=unitTests::{safe}")
           PY
           exit "$EXIT"
+
+      - name: Upload unit test log
+        if: failure() && hashFiles('gradle-test.log') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: gradle-test-log
+          path: |
+            gradle-test.log
+            gradle-test-failure.txt
+          if-no-files-found: ignore
+          retention-days: 7
