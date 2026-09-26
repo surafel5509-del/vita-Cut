@@ -1,0 +1,7 @@
+Trigger CI workflow rebuild - All compilation errors have been fixed:
+
+1. Cards.kt: Fixed Surface content lambda by wrapping with Column 
+2. States.kt: Added ErrorOutline icon import
+3. KeyframeMath.kt: Fixed Float.toIntBits() using Java interop
+
+Ready for APK build.
