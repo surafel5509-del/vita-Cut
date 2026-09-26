@@ -25,7 +25,9 @@ import kotlin.math.roundToInt
  */
 object BeatDetector {
 
-    data class BeatResult(
+    val EMPTY: BeatResult get() = BeatResult.EMPTY
+
+    data class BeatResult {
         val beatTimesUs: List<Long>,
         val bpm: Float,
         val confidence: Float,
