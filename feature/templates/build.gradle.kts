@@ -29,6 +29,7 @@ android {
 dependencies {
     implementation(projects.core.common)
     implementation(projects.core.model)
+    implementation(projects.core.timeline)
     implementation(projects.core.designsystem)
     api(projects.domain)
 

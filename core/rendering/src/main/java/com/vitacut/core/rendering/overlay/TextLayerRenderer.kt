@@ -352,10 +352,12 @@ class TextLayerRenderer @Inject constructor(
         }
 
         // Gradient fill overrides the solid color when configured.
-        if (style.gradientStartArgb != null && style.gradientEndArgb != null) {
+        val gradientStart = style.gradientStartArgb
+        val gradientEnd = style.gradientEndArgb
+        if (gradientStart != null && gradientEnd != null) {
             paint.shader = LinearGradient(
                 0f, 0f, layout.width.toFloat(), layout.height.toFloat(),
-                style.gradientStartArgb, style.gradientEndArgb,
+                gradientStart, gradientEnd,
                 Shader.TileMode.CLAMP,
             )
         }

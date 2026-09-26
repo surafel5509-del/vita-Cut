@@ -1,6 +1,5 @@
 package com.vitacut.core.rendering.audio
 
-import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.audio.AudioProcessor
 import androidx.media3.common.audio.SpeedProvider
 import com.vitacut.core.model.AudioClipItem
@@ -69,26 +68,27 @@ class VitaSpeedProvider(
     private val sourceOutUs: Long,
 ) : SpeedProvider {
 
-    override fun getSpeed(timeUs: Long): PlaybackParameters {
-        val speed = when (speedModel) {
-            is SpeedModel.Constant -> speedModel.speed
+    override fun getSpeed(timeUs: Long): Float {
+        val speed = when (val model = speedModel) {
+            is SpeedModel.Constant -> model.speed
             is SpeedModel.Curve -> {
                 val sourceDuration = (sourceOutUs - sourceInUs).coerceAtLeast(1L)
                 val progress = ((timeUs - sourceInUs).toFloat() / sourceDuration).coerceIn(0f, 1f)
-                speedModel.curve.speedAt(progress)
+                model.curve.speedAt(progress)
             }
         }
-        return PlaybackParameters(speed.coerceIn(0.1f, 8f))
+        return speed.coerceIn(0.1f, 8f)
     }
 
     override fun getNextSpeedChangeTimeUs(timeUs: Long): Long {
-        if (speedModel is SpeedModel.Constant) return Long.MAX_VALUE
-        // Curves change continuously; report the next segment boundary for scheduler hints.
-        val curve = speedModel.curve
+        val curve = (speedModel as? SpeedModel.Curve)?.curve ?: return Long.MAX_VALUE
         val sourceDuration = (sourceOutUs - sourceInUs).coerceAtLeast(1L)
         val progress = ((timeUs - sourceInUs).toFloat() / sourceDuration).coerceIn(0f, 1f)
-        val nextPoint = curve.points.sortedBy { it.position }.firstOrNull { it.position > progress }
-        return nextPoint?.let { sourceInUs + (it.position * sourceDuration).toLong() } ?: Long.MAX_VALUE
+        val nextPoint = curve.points.sortedBy { point -> point.position }
+            .firstOrNull { point -> point.position > progress }
+        return nextPoint?.let { point ->
+            sourceInUs + (point.position * sourceDuration).toLong()
+        } ?: Long.MAX_VALUE
     }
 
     companion object {

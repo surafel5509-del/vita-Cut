@@ -135,10 +135,12 @@ class EffectsPipelineBuilder @Inject constructor(
         val lutName = blendedBase.lutAssetName
         if (lutName != null && lutResolver != null) {
             val lut = lutResolver.resolve(lutName)
-            effects += LutEffect(
-                lutBitmapProvider = lut.bitmapProvider,
-                lutSizeProvider = { lut.size },
-            )
+            if (lut != null) {
+                effects += LutEffect(
+                    lutBitmapProvider = lut.bitmapProvider,
+                    lutSizeProvider = { lut.size },
+                )
+            }
         }
 
         // 7. Mask.
