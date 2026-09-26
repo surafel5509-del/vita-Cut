@@ -15,6 +15,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.Icon
+import androidx.compose.material.icons.outlined.ErrorOutline
+import androidx.compose.material.icons.Icons
 
 /** Centered spinner for panel-level loading (project opening, analysis, export prep). */
 @Composable
@@ -106,7 +108,7 @@ fun VitaErrorState(
         verticalArrangement = Arrangement.Center,
     ) {
         Icon(
-            androidx.compose.material.icons.Icons.Outlined.ErrorOutline,
+            Icons.Outlined.ErrorOutline,
             contentDescription = null,
             modifier = Modifier.size(48.dp),
             tint = MaterialTheme.colorScheme.error,
