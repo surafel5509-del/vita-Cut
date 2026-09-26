@@ -2,11 +2,16 @@ package com.vitacut.feature.editor.tools
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -15,10 +20,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.vitacut.core.designsystem.R
 import com.vitacut.core.designsystem.components.VitaButton
 import com.vitacut.core.designsystem.components.VitaChipItem
@@ -62,24 +74,21 @@ internal fun FiltersSheet(viewModel: EditorViewModel) {
         return
     }
     val categories = remember { FilterLibrary.ALL.map { it.category }.distinct() }
-    categories.forEach { category ->
-        Text(
-            catalogLabel(category.name),
-            style = MaterialTheme.typography.labelMedium,
-            modifier = Modifier.padding(start = 20.dp, top = 8.dp),
-        )
-        VitaChipRow(
-            chips = buildList {
-                add(VitaChipItem("none", stringResource(R.string.tool_transition_none), item.filter.filterId == null))
-                FilterLibrary.ALL.filter { it.category == category }.forEach { filter ->
-                    add(VitaChipItem(filter.id, catalogLabel(filter.id), item.filter.filterId == filter.id))
-                }
+    var category by remember { mutableStateOf(categories.first()) }
+    VitaChipRow(
+        chips = categories.map { cat ->
+            VitaChipItem(cat.name, catalogLabel(cat.name), cat == category)
+        },
+        onChipClick = { id -> category = categories.first { it.name == id } },
+    )
+    val filters = remember(category) { FilterLibrary.ALL.filter { it.category == category } }
+    CatalogGrid(
+        cells = listOf(CatalogCell("none", stringResource(R.string.action_reset), item.filter.filterId == null)) +
+            filters.map { filter ->
+                CatalogCell(filter.id, catalogLabel(filter.id), item.filter.filterId == filter.id)
             },
-            onChipClick = { id ->
-                viewModel.setFilter(id.takeIf { it != "none" })
-            },
-        )
-    }
+        onClick = { id -> viewModel.setFilter(id.takeIf { it != "none" }) },
+    )
     if (item.filter.filterId != null) {
         VitaLabeledSlider(
             label = stringResource(R.string.tool_intensity),
@@ -104,23 +113,20 @@ internal fun EffectsSheet(viewModel: EditorViewModel) {
         EmptySelectionHint()
         return
     }
-    EffectCategory.entries.forEach { category ->
-        Text(
-            catalogLabel(category.name),
-            style = MaterialTheme.typography.labelMedium,
-            modifier = Modifier.padding(start = 20.dp, top = 8.dp),
-        )
-        VitaChipRow(
-            chips = EffectKind.entries.filter { it.category == category }.map { kind ->
-                VitaChipItem(
-                    kind.name,
-                    catalogLabel(kind.name),
-                    item.effects.any { it.kind == kind },
-                )
-            },
-            onChipClick = { id -> viewModel.addEffect(EffectKind.valueOf(id)) },
-        )
-    }
+    var category by remember { mutableStateOf(EffectCategory.TRENDING) }
+    VitaChipRow(
+        chips = EffectCategory.entries.map { cat ->
+            VitaChipItem(cat.name, catalogLabel(cat.name), cat == category)
+        },
+        onChipClick = { id -> category = EffectCategory.valueOf(id) },
+    )
+    val kinds = remember(category) { EffectKind.entries.filter { it.category == category } }
+    CatalogGrid(
+        cells = kinds.map { kind ->
+            CatalogCell(kind.name, catalogLabel(kind.name), item.effects.any { it.kind == kind })
+        },
+        onClick = { id -> viewModel.addEffect(EffectKind.valueOf(id)) },
+    )
     item.effects.forEach { effect ->
         Row(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 4.dp),
@@ -641,3 +647,70 @@ private fun defaultValueFor(property: KeyframeProperty, item: com.vitacut.core.m
 @Suppress("unused")
 private fun isSilentAt(project: Project, timeUs: Long): Boolean =
     TimelineQueries.audioAt(project, timeUs).isEmpty()
+
+internal data class CatalogCell(val id: String, val label: String, val selected: Boolean)
+
+@Composable
+internal fun CatalogGrid(
+    cells: List<CatalogCell>,
+    onClick: (String) -> Unit,
+    columns: Int = 4,
+) {
+    val palette = listOf(
+        listOf(Color(0xFF1E293B), Color(0xFF0EA5E9)),
+        listOf(Color(0xFF3B0764), Color(0xFFD946EF)),
+        listOf(Color(0xFF431407), Color(0xFFF97316)),
+        listOf(Color(0xFF052E16), Color(0xFF22C55E)),
+        listOf(Color(0xFF111827), Color(0xFF6366F1)),
+        listOf(Color(0xFF3F1D0A), Color(0xFFFBBF24)),
+    )
+    Column(modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)) {
+        cells.chunked(columns).forEach { row ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                row.forEach { cell ->
+                    val colors = palette[(cell.id.hashCode().and(0x7fffffff)) % palette.size]
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .aspectRatio(0.85f)
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(Brush.verticalGradient(colors))
+                            .clickable { onClick(cell.id) }
+                            .then(
+                                if (cell.selected) {
+                                    Modifier.padding(0.dp)
+                                } else {
+                                    Modifier
+                                },
+                            ),
+                        contentAlignment = Alignment.BottomCenter,
+                    ) {
+                        if (cell.selected) {
+                            Box(
+                                modifier = Modifier
+                                    .matchParentSize()
+                                    .background(Color(0xFF22D3EE).copy(alpha = 0.22f)),
+                            )
+                        }
+                        Text(
+                            cell.label,
+                            color = Color.White,
+                            fontSize = 10.sp,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(6.dp),
+                        )
+                    }
+                }
+                repeat(columns - row.size) {
+                    Box(modifier = Modifier.weight(1f))
+                }
+            }
+            androidx.compose.foundation.layout.Spacer(Modifier.padding(bottom = 8.dp))
+        }
+    }
+}

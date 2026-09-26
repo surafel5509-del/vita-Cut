@@ -1,6 +1,8 @@
 package com.vitacut.feature.editor.tools
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -24,8 +26,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.vitacut.core.designsystem.R
 import com.vitacut.core.designsystem.components.VitaButton
@@ -115,6 +120,8 @@ internal fun MediaSheet(viewModel: EditorViewModel) {
     val audioPicker = rememberLauncherForActivityResult(
         ActivityResultContracts.OpenMultipleDocuments(),
     ) { uris -> viewModel.addMedia(uris) }
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val startVoiceover = rememberStartVoiceover(viewModel)
 
     SheetTitle(stringResource(R.string.editor_add_media))
     Row(
@@ -149,12 +156,11 @@ internal fun MediaSheet(viewModel: EditorViewModel) {
             onClick = { audioPicker.launch(arrayOf("audio/*")) },
             modifier = Modifier.weight(1f),
         )
-        val uiRecording = viewModel.uiState.value.recorderState
         VitaOutlinedButton(
             text = stringResource(R.string.editor_record_voiceover),
             onClick = {
-                if (uiRecording == com.vitacut.core.media.record.RecorderState.IDLE) {
-                    viewModel.startVoiceover()
+                if (uiState.recorderState == com.vitacut.core.media.record.RecorderState.IDLE) {
+                    startVoiceover()
                 } else {
                     viewModel.stopVoiceover()
                 }
@@ -259,8 +265,29 @@ private fun curvePresetLabel(preset: SpeedCurvePreset): Int = when (preset) {
 @Composable
 internal fun AudioSheet(viewModel: EditorViewModel) {
     val item = viewModel.selectedItem()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val audioPicker = rememberLauncherForActivityResult(
+        ActivityResultContracts.OpenMultipleDocuments(),
+    ) { uris -> viewModel.addMedia(uris) }
+    val startVoiceover = rememberStartVoiceover(viewModel)
     SheetTitle(stringResource(R.string.tool_audio))
-    if (item == null) {
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        val recording = uiState.recorderState != com.vitacut.core.media.record.RecorderState.IDLE
+        VitaButton(
+            text = stringResource(if (recording) R.string.audio_stop_record else R.string.audio_start_record),
+            onClick = { if (recording) viewModel.stopVoiceover() else startVoiceover() },
+            modifier = Modifier.weight(1f),
+        )
+        VitaOutlinedButton(
+            text = stringResource(R.string.editor_add_music),
+            onClick = { audioPicker.launch(arrayOf("audio/*")) },
+            modifier = Modifier.weight(1f),
+        )
+    }
+    if (item !is VideoClipItem && item !is AudioClipItem) {
         EmptySelectionHint()
         return
     }
@@ -369,11 +396,14 @@ internal fun AudioSheet(viewModel: EditorViewModel) {
 
 // region Text & stickers
 
+private enum class TextStudioTab { PRESETS, COLOR, FONTS, ALIGN, STROKE, GLOW, BACKGROUND, SHADOW }
+
 @Composable
 internal fun TextSheet(viewModel: EditorViewModel) {
     val item = viewModel.selectedItem() as? TextItem
     SheetTitle(stringResource(R.string.tool_text))
     var text by remember(item?.id) { mutableStateOf(item?.text ?: "") }
+    var tab by remember { mutableStateOf(TextStudioTab.PRESETS) }
     OutlinedTextField(
         value = text,
         onValueChange = { text = it },
@@ -398,24 +428,34 @@ internal fun TextSheet(viewModel: EditorViewModel) {
         }
     }
     if (item != null) {
-        Text(
-            stringResource(R.string.tool_text_presets),
-            style = MaterialTheme.typography.labelMedium,
-            modifier = Modifier.padding(start = 20.dp),
+        val colors = listOf(
+            0xFFFFFFFF.toInt() to "White",
+            0xFF000000.toInt() to "Black",
+            0xFFFFD54F.toInt() to "Gold",
+            0xFF22D3EE.toInt() to "Cyan",
+            0xFFF472B6.toInt() to "Pink",
+            0xFFEF4444.toInt() to "Red",
+            0xFF22C55E.toInt() to "Green",
+            0xFFF97316.toInt() to "Orange",
         )
         VitaChipRow(
-            chips = TextStyleLibrary.ALL.map { preset ->
-                VitaChipItem(preset.id, catalogLabel(preset.id), item.style == preset.style)
+            chips = TextStudioTab.entries.map { entry ->
+                val label = when (entry) {
+                    TextStudioTab.PRESETS -> R.string.text_tab_presets
+                    TextStudioTab.COLOR -> R.string.text_tab_color
+                    TextStudioTab.FONTS -> R.string.text_tab_fonts
+                    TextStudioTab.ALIGN -> R.string.text_tab_align
+                    TextStudioTab.STROKE -> R.string.text_tab_stroke
+                    TextStudioTab.GLOW -> R.string.text_tab_glow
+                    TextStudioTab.BACKGROUND -> R.string.text_tab_background
+                    TextStudioTab.SHADOW -> R.string.text_tab_shadow
+                }
+                VitaChipItem(entry.name, stringResource(label), tab == entry)
             },
-            onChipClick = viewModel::applyTextPreset,
-        )
-        Text(
-            stringResource(R.string.tool_text_style),
-            style = MaterialTheme.typography.labelMedium,
-            modifier = Modifier.padding(start = 20.dp, top = 8.dp),
+            onChipClick = { id -> tab = TextStudioTab.valueOf(id) },
         )
         VitaLabeledSlider(
-            label = stringResource(R.string.tool_text_style),
+            label = stringResource(R.string.text_size),
             value = item.style.sizeFraction,
             onValueChange = { size ->
                 viewModel.setSelectedTextStyle { it.copy(sizeFraction = size) }
@@ -424,21 +464,103 @@ internal fun TextSheet(viewModel: EditorViewModel) {
             valueRange = 0.02f..0.2f,
             valueText = "${(item.style.sizeFraction * 100).toInt()}%",
         )
-        val colors = listOf(
-            0xFFFFFFFF.toInt() to "White",
-            0xFF000000.toInt() to "Black",
-            0xFFFFD54F.toInt() to "Gold",
-            0xFF22D3EE.toInt() to "Cyan",
-            0xFFF472B6.toInt() to "Pink",
-        )
-        VitaChipRow(
-            chips = colors.mapIndexed { index, (argb, name) ->
-                VitaChipItem(index.toString(), name, item.style.colorArgb == argb)
-            },
-            onChipClick = { index ->
-                viewModel.setSelectedTextStyle { it.copy(colorArgb = colors[index.toInt()].first) }
-            },
-        )
+        when (tab) {
+            TextStudioTab.PRESETS -> VitaChipRow(
+                chips = TextStyleLibrary.ALL.map { preset ->
+                    VitaChipItem(preset.id, catalogLabel(preset.id), item.style == preset.style)
+                },
+                onChipClick = viewModel::applyTextPreset,
+            )
+            TextStudioTab.COLOR -> VitaChipRow(
+                chips = colors.mapIndexed { index, (argb, name) ->
+                    VitaChipItem(index.toString(), name, item.style.colorArgb == argb)
+                },
+                onChipClick = { index ->
+                    viewModel.setSelectedTextStyle { it.copy(colorArgb = colors[index.toInt()].first) }
+                },
+            )
+            TextStudioTab.FONTS -> {
+                VitaChipRow(
+                    chips = listOf("default", "serif", "monospace").map { key ->
+                        VitaChipItem(key, catalogLabel(key), item.style.fontFamilyKey == key)
+                    },
+                    onChipClick = { key ->
+                        viewModel.setSelectedTextStyle { it.copy(fontFamilyKey = key) }
+                    },
+                )
+                VitaChipRow(
+                    chips = listOf(
+                        VitaChipItem("bold", "B", item.style.bold),
+                        VitaChipItem("italic", "I", item.style.italic),
+                        VitaChipItem("underline", "U", item.style.underline),
+                    ),
+                    onChipClick = { id ->
+                        viewModel.setSelectedTextStyle { style ->
+                            when (id) {
+                                "bold" -> style.copy(bold = !style.bold)
+                                "italic" -> style.copy(italic = !style.italic)
+                                else -> style.copy(underline = !style.underline)
+                            }
+                        }
+                    },
+                )
+            }
+            TextStudioTab.ALIGN -> VitaChipRow(
+                chips = com.vitacut.core.model.TextAlignment.entries.map { align ->
+                    VitaChipItem(align.name, align.name.lowercase(), item.style.alignment == align)
+                },
+                onChipClick = { id ->
+                    viewModel.setSelectedTextStyle {
+                        it.copy(alignment = com.vitacut.core.model.TextAlignment.valueOf(id))
+                    }
+                },
+            )
+            TextStudioTab.STROKE -> VitaLabeledSlider(
+                label = stringResource(R.string.text_tab_stroke),
+                value = item.style.strokeWidthFraction,
+                onValueChange = { width ->
+                    viewModel.setSelectedTextStyle { it.copy(strokeWidthFraction = width) }
+                },
+                modifier = Modifier.padding(horizontal = 20.dp),
+                valueRange = 0f..0.2f,
+                valueText = "${(item.style.strokeWidthFraction * 100).toInt()}%",
+            )
+            TextStudioTab.GLOW -> VitaLabeledSlider(
+                label = stringResource(R.string.text_tab_glow),
+                value = item.style.shadowRadiusFraction,
+                onValueChange = { radius ->
+                    viewModel.setSelectedTextStyle {
+                        it.copy(
+                            shadowRadiusFraction = radius,
+                            shadowColorArgb = 0xFF22D3EE.toInt(),
+                        )
+                    }
+                },
+                modifier = Modifier.padding(horizontal = 20.dp),
+                valueRange = 0f..0.4f,
+                valueText = "${(item.style.shadowRadiusFraction * 100).toInt()}%",
+            )
+            TextStudioTab.BACKGROUND -> VitaChipRow(
+                chips = colors.mapIndexed { index, (argb, name) ->
+                    VitaChipItem(index.toString(), name, item.style.backgroundColorArgb == argb)
+                },
+                onChipClick = { index ->
+                    viewModel.setSelectedTextStyle { it.copy(backgroundColorArgb = colors[index.toInt()].first) }
+                },
+            )
+            TextStudioTab.SHADOW -> VitaLabeledSlider(
+                label = stringResource(R.string.text_tab_shadow),
+                value = item.style.shadowDyFraction,
+                onValueChange = { dy ->
+                    viewModel.setSelectedTextStyle {
+                        it.copy(shadowDyFraction = dy, shadowRadiusFraction = maxOf(it.shadowRadiusFraction, 0.08f))
+                    }
+                },
+                modifier = Modifier.padding(horizontal = 20.dp),
+                valueRange = 0f..0.2f,
+                valueText = "${(item.style.shadowDyFraction * 100).toInt()}%",
+            )
+        }
         Text(
             stringResource(R.string.tool_text_animation),
             style = MaterialTheme.typography.labelMedium,
@@ -474,30 +596,6 @@ internal fun TextSheet(viewModel: EditorViewModel) {
                 )
             },
         )
-        VitaChipRow(
-            chips = listOf("default", "serif", "monospace").map { key ->
-                VitaChipItem(key, catalogLabel(key), item.style.fontFamilyKey == key)
-            },
-            onChipClick = { key ->
-                viewModel.setSelectedTextStyle { it.copy(fontFamilyKey = key) }
-            },
-        )
-        VitaChipRow(
-            chips = listOf(
-                VitaChipItem("bold", "B", item.style.bold),
-                VitaChipItem("italic", "I", item.style.italic),
-                VitaChipItem("underline", "U", item.style.underline),
-            ),
-            onChipClick = { id ->
-                viewModel.setSelectedTextStyle { style ->
-                    when (id) {
-                        "bold" -> style.copy(bold = !style.bold)
-                        "italic" -> style.copy(italic = !style.italic)
-                        else -> style.copy(underline = !style.underline)
-                    }
-                }
-            },
-        )
     }
 }
 
@@ -512,17 +610,24 @@ private val EMOJI_CHOICES = listOf(
 internal fun StickerSheet(viewModel: EditorViewModel) {
     SheetTitle(stringResource(R.string.tool_sticker))
     Text(
-        stringResource(R.string.tool_sticker),
+        stringResource(R.string.sticker_emoji),
         style = MaterialTheme.typography.labelMedium,
-        modifier = Modifier.padding(start = 20.dp),
+        modifier = Modifier.padding(start = 20.dp, top = 4.dp),
     )
-    VitaChipRow(
-        chips = EMOJI_CHOICES.map { emoji -> VitaChipItem(emoji, emoji, false) },
-        onChipClick = { emoji -> viewModel.addSticker(StickerSource.Emoji(emoji)) },
+    CatalogGrid(
+        cells = EMOJI_CHOICES.map { emoji -> CatalogCell(emoji, emoji, false) },
+        onClick = { emoji -> viewModel.addSticker(StickerSource.Emoji(emoji)) },
+        columns = 6,
     )
-    VitaChipRow(
-        chips = BuiltInStickers.ALL_KEYS.map { key -> VitaChipItem(key, key, false) },
-        onChipClick = { key -> viewModel.addSticker(StickerSource.BuiltIn(key)) },
+    Text(
+        stringResource(R.string.sticker_pack),
+        style = MaterialTheme.typography.labelMedium,
+        modifier = Modifier.padding(start = 20.dp, top = 8.dp),
+    )
+    CatalogGrid(
+        cells = BuiltInStickers.ALL_KEYS.map { key -> CatalogCell(key, catalogLabel(key), false) },
+        onClick = { key -> viewModel.addSticker(StickerSource.BuiltIn(key)) },
+        columns = 4,
     )
 }
 
@@ -537,6 +642,21 @@ internal fun EmptySelectionHint() {
 }
 
 // endregion
+
+@Composable
+private fun rememberStartVoiceover(viewModel: EditorViewModel): () -> Unit {
+    val context = LocalContext.current
+    val permission = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission(),
+    ) { granted -> if (granted) viewModel.startVoiceover() }
+    return {
+        val granted = ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.RECORD_AUDIO,
+        ) == PackageManager.PERMISSION_GRANTED
+        if (granted) viewModel.startVoiceover() else permission.launch(Manifest.permission.RECORD_AUDIO)
+    }
+}
 
 /** Shares a file through the app FileProvider (used by caption exports). */
 internal fun shareFile(context: android.content.Context, file: File, mime: String) {

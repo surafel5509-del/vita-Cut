@@ -51,7 +51,7 @@ internal object VitaColors {
     // Shared semantic colors used by custom components (timeline, waveform, record).
     val Waveform = Color(0xFF5EEAD4)
     val WaveformPlayed = Color(0xFF8B5CF6)
-    val Playhead = Color(0xFFFFFFFF)
+    val Playhead = Color(0xFF22D3EE)
     val RecordRed = Color(0xFFEF4444)
     val Scrim = Color(0xB3000000)
 }

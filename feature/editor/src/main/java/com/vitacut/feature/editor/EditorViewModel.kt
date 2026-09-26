@@ -254,7 +254,7 @@ class EditorViewModel @Inject constructor(
     fun openSheet(sheet: EditorSheet?) {
         // Clip-scoped sheets need a selection; nudge the user instead of showing empty panels.
         val needsSelection = sheet in setOf(
-            EditorSheet.CLIP, EditorSheet.SPEED, EditorSheet.AUDIO,
+            EditorSheet.CLIP, EditorSheet.SPEED,
             EditorSheet.TRANSITION, EditorSheet.KEYFRAME,
             EditorSheet.TRANSFORM, EditorSheet.MASK, EditorSheet.CHROMA,
         )
@@ -262,7 +262,7 @@ class EditorViewModel @Inject constructor(
             message("editor_no_clip_selected")
             return
         }
-        if (sheet == EditorSheet.CLIP || sheet == EditorSheet.SPEED || sheet == EditorSheet.AUDIO) {
+        if (sheet == EditorSheet.CLIP || sheet == EditorSheet.SPEED) {
             val item = selectedItem()
             if (item is TextItem || item is StickerItem) {
                 _uiState.value = _uiState.value.copy(activeSheet = EditorSheet.TEXT)
@@ -589,6 +589,34 @@ class EditorViewModel @Inject constructor(
 
     fun setCanvasBackground(background: com.vitacut.core.model.CanvasBackground) {
         document?.update("canvas.background") { TimelineEngine.setCanvasBackground(it, background) }
+    }
+
+    fun setOpacity(opacity: Float) {
+        updateTransform { it.copy(opacity = opacity.coerceIn(0f, 1f)) }
+    }
+
+    /** Digital stabilize: crop the shaky edges and zoom in. Toggle restores full frame. */
+    fun stabilizeSelected() {
+        val doc = document ?: return
+        val id = _uiState.value.selectedItemId ?: return
+        val clip = doc.project.item(id) as? VideoClipItem ?: return
+        val enable = clip.crop.isFullFrame
+        doc.update("clip.stabilize") { project ->
+            val nextTransform = clip.transform.copy(
+                scaleX = if (enable) maxOf(clip.transform.scaleX, 1.08f) else 1f,
+                scaleY = if (enable) maxOf(clip.transform.scaleY, 1.08f) else 1f,
+            )
+            val afterTransform = TimelineEngine.setTransform(project, id, nextTransform)
+            TimelineEngine.setCrop(
+                afterTransform,
+                id,
+                if (enable) {
+                    com.vitacut.core.model.CropSettings(0.04f, 0.04f, 0.96f, 0.96f)
+                } else {
+                    com.vitacut.core.model.CropSettings.FULL
+                },
+            )
+        }
     }
 
     fun updateTransform(transform: (com.vitacut.core.model.SpatialTransform) -> com.vitacut.core.model.SpatialTransform) {

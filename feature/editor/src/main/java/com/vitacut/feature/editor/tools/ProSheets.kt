@@ -242,6 +242,11 @@ internal fun ChromaSheet(viewModel: EditorViewModel) {
         valueRange = 0f..1f,
         valueText = "${(chroma.spillSuppression * 100).toInt()}%",
     )
+    VitaButton(
+        text = stringResource(R.string.cutout_remove_bg),
+        onClick = viewModel::removeBackgroundOfSelected,
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 8.dp),
+    )
 }
 
 @Composable
