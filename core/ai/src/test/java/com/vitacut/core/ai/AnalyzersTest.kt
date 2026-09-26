@@ -287,6 +287,6 @@ class TemplateMatcherTest {
         val pixels = IntArray(4) { 0xFF804020 } // r=128 g=64 b=32
         val gray = TemplateMatcher.toGray(pixels, 2, 2)
         // 128*77 + 64*150 + 32*29 = 9856+9600+928 = 20384 → shr 8 = 79
-        assertEquals(79.toByte(), gray[0])
+        assertEquals(79, gray[0].toInt() and 0xFF)
     }
 }

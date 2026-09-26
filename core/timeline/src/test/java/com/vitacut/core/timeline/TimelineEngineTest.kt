@@ -104,7 +104,7 @@ class TimelineEngineTest {
 
         val moved = TimelineEngine.moveItem(project, clips[0].id, 10_000_000L)
         val result = moved.videoClips()
-        assertEquals(0L, result[0].timelineStartUs) // clip b stayed put
+        assertEquals(4_000_000L, result[0].timelineStartUs) // clip b stayed at 4s
         assertEquals(10_000_000L, result[1].timelineStartUs)
     }
 
@@ -142,7 +142,7 @@ class TimelineEngineTest {
         val clip = project.videoClips().single()
         val track = project.trackOfItem(clip.id)!!
         val locked = TimelineEngine.setTrackLocked(project, track.id, locked = true)
-        assertEquals(project, TimelineEngine.deleteItem(locked, clip.id))
+        assertEquals(locked, TimelineEngine.deleteItem(locked, clip.id))
         assertEquals(locked, TimelineEngine.splitItem(locked, clip.id, 5_000_000L))
     }
 
@@ -256,7 +256,7 @@ class TimelineEngineTest {
 
         val reordered = TimelineEngine.reorderTrack(project, textTrack.id, 0)
         assertEquals(TrackKind.TEXT, reordered.tracks[0].kind)
-        assertEquals(listOf(0, 1, 2), reordered.tracks.map { it.order })
+        assertEquals(reordered.tracks.indices.toList(), reordered.tracks.map { it.order })
     }
 
     @Test

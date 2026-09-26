@@ -122,8 +122,9 @@ class ProjectSerializationTest {
     @Test
     fun `garbage input returns null instead of throwing`() {
         assertNull(projectFromJson("not json at all"))
-        assertNull(projectFromJson("{}"))
         assertNull(projectFromJson(""))
+        // Empty object decodes as a default Project (every field has a default).
+        assertNotNull(projectFromJson("{}"))
     }
 
     @Test

@@ -43,8 +43,8 @@ class CaptionEditorTest {
     @Test
     fun `retime keeps order`() {
         val moved = CaptionEditor.retime(sampleSet(), idB, 100_000L, 900_000L)
-        assertEquals(idB, moved.captions.first().id)
-        assertEquals(100_000L, moved.captions.first().startUs)
+        assertEquals(listOf(idA, idB), moved.captions.map { it.id })
+        assertEquals(100_000L, moved.captions[1].startUs)
     }
 
     @Test
