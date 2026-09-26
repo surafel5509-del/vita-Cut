@@ -39,7 +39,7 @@ class BeatDetectorTest {
     @Test
     fun `flat envelope yields no beats`() {
         val result = BeatDetector.detect(FloatArray(1000) { 0.5f }, 10_000L)
-        assertEquals(BeatDetector.EMPTY, result)
+        assertEquals(BeatDetector.BeatResult.EMPTY, result)
     }
 
     @Test
