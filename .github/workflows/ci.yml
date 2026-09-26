@@ -185,4 +185,30 @@ jobs:
           retention-days: 14
 
       - name: Run unit tests
-        run: ./gradlew test --stacktrace --no-daemon --continue
+        run: |
+          set +e
+          ./gradlew testDebugUnitTest \
+            :core:model:test \
+            :core:timeline:test \
+            :domain:test \
+            --stacktrace --no-daemon --continue > gradle-test.log 2>&1
+          EXIT=$?
+          tail -n 80 gradle-test.log
+          python3 - <<'PY'
+          from pathlib import Path
+          text = Path("gradle-test.log").read_text(errors="replace")
+          lines = text.splitlines()
+          interesting = [
+              ln for ln in lines
+              if ln.startswith("e:")
+              or "FAILED" in ln
+              or ln.startswith("FAILURE:")
+              or "There were failing tests" in ln
+              or "What went wrong" in ln
+          ]
+          chunk = "\n".join(interesting[:80] or lines[-40:])
+          Path("gradle-test-failure.txt").write_text(chunk)
+          print("----- TEST FAILURES -----")
+          print(chunk)
+          PY
+          exit "$EXIT"
