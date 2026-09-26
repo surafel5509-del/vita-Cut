@@ -89,5 +89,5 @@ object KeyframeMath {
         keyframes.indexOfFirst { it.timeUs > timeUs }
 
     fun packColor(argb: Int): Float = Float.fromBits(argb)
-    fun unpackColor(bits: Float): Int = bits.toIntBits()
+    fun unpackColor(bits: Float): Int = java.lang.Float.floatToIntBits(bits)
 }
