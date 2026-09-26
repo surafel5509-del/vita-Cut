@@ -107,10 +107,13 @@ object SpeedMath {
     ): Float = when (speed) {
         is SpeedModel.Constant -> speed.speed
         is SpeedModel.Curve -> {
-            if (timelineDurationUs <= 0L) return 1f
-            val t = (timelineOffsetUs.toFloat() / timelineDurationUs).coerceIn(0f, 1f)
-            val sourceProgress = curveSourceProgressAt(t, speed.curve)
-            speed.curve.speedAt(sourceProgress).coerceIn(0.1f, 8f)
+            if (timelineDurationUs <= 0L) {
+                1f
+            } else {
+                val t = (timelineOffsetUs.toFloat() / timelineDurationUs).coerceIn(0f, 1f)
+                val sourceProgress = curveSourceProgressAt(t, speed.curve)
+                speed.curve.speedAt(sourceProgress).coerceIn(0.1f, 8f)
+            }
         }
     }
 

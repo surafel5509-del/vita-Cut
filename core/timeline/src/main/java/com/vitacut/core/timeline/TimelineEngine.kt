@@ -194,7 +194,12 @@ object TimelineEngine {
                     )
                 }
 
-                else -> item.copy(
+                is TextItem -> item.copy(
+                    timelineStartUs = item.timelineStartUs + delta,
+                    durationUs = item.durationUs - delta,
+                )
+
+                is StickerItem -> item.copy(
                     timelineStartUs = item.timelineStartUs + delta,
                     durationUs = item.durationUs - delta,
                 )
@@ -222,7 +227,9 @@ object TimelineEngine {
                     item.copy(sourceOutUs = newSourceOut, durationUs = newDuration)
                 }
 
-                else -> item.copy(durationUs = newDuration)
+                is TextItem -> item.copy(durationUs = newDuration)
+
+                is StickerItem -> item.copy(durationUs = newDuration)
             }
         }
 
