@@ -159,14 +159,10 @@ class ExportEngine @Inject constructor(
                     VitaLog.e("ExportEngine", "Export failed: ${exception.message}", exception)
                     runCatching { tempFile.delete() }
                     val messageKey = when (exception.errorCode) {
-                        ExportException.ERROR_CODE_NO_TRACKS -> "export_error_no_tracks"
-                        ExportException.ERROR_CODE_UNSUPPORTED_TYPE -> "export_error_unsupported_codec"
-                        ExportException.ERROR_CODE_DECODER_INIT_FAILED,
-                        ExportException.ERROR_CODE_DECODER_QUERY_FAILED -> "export_error_decoder"
-
-                        ExportException.ERROR_CODE_ENCODER_INIT_FAILED -> "export_error_encoder"
+                        ExportException.ERROR_CODE_DECODER_INIT_FAILED -> "export_error_decoder"
+                        ExportException.ERROR_CODE_ENCODER_INIT_FAILED,
+                        ExportException.ERROR_CODE_ENCODING_FAILED -> "export_error_encoder"
                         ExportException.ERROR_CODE_IO_FILE_NOT_FOUND -> "error_file_missing"
-                        ExportException.ERROR_CODE_IO_NO_SPACE -> "error_insufficient_storage"
                         else -> "error_export_failed"
                     }
                     trySend(

@@ -33,9 +33,10 @@ import com.vitacut.core.model.VitaJson
 import com.vitacut.core.model.projectFromJson
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.singleOrNull
 
 /**
  * Background export (spec requirement): exports continue when the app is backgrounded via a
@@ -114,7 +115,8 @@ class ExportWorker @AssistedInject constructor(
                     runCatching { setProgressAsync(workDataOf(KEY_PROGRESS to state.percent)) }
                 }
             }
-            .singleOrNull { it is ExportState.Succeeded || it is ExportState.Failed || it is ExportState.Cancelled }
+            .filter { it is ExportState.Succeeded || it is ExportState.Failed || it is ExportState.Cancelled }
+            .firstOrNull()
 
         return when (terminal) {
             is ExportState.Succeeded -> {
@@ -180,7 +182,7 @@ class ExportWorker @AssistedInject constructor(
         runCatching { VitaJson.decodeFromString(ExportSettings.serializer(), it) }.getOrNull()
     }
 
-    private fun setForegroundSafely(info: ForegroundInfo) {
+    private suspend fun setForegroundSafely(info: ForegroundInfo) {
         runCatching { setForeground(info) }
     }
 
