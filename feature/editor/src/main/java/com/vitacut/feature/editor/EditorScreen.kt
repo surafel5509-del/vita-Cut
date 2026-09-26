@@ -23,7 +23,7 @@ import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material.icons.outlined.AutoFixHigh
-import androidx.compose.material.icons.outlined.Caption
+import androidx.compose.material.icons.outlined.ClosedCaption
 import androidx.compose.material.icons.outlined.Colorize
 import androidx.compose.material.icons.outlined.ContentCut
 import androidx.compose.material.icons.outlined.Crop
@@ -350,7 +350,7 @@ private fun ToolRail(
         ToolEntry(EditorSheet.MASK, Icons.Outlined.CenterFocusWeak, R.string.tool_mask),
         ToolEntry(EditorSheet.CHROMA, Icons.Outlined.Videocam, R.string.tool_chroma_key),
         ToolEntry(EditorSheet.CANVAS, Icons.Outlined.Crop, R.string.tool_canvas),
-        ToolEntry(EditorSheet.CAPTIONS, Icons.Outlined.Caption, R.string.captions_title),
+        ToolEntry(EditorSheet.CAPTIONS, Icons.Outlined.ClosedCaption, R.string.captions_title),
         ToolEntry(EditorSheet.AI, Icons.Outlined.AutoAwesome, R.string.ai_title),
         ToolEntry(EditorSheet.KEYFRAME, Icons.Outlined.Key, R.string.tool_keyframe_add),
     )

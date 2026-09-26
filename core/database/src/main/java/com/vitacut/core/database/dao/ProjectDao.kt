@@ -63,7 +63,7 @@ interface ProjectDao {
         "UPDATE projects SET pending_json = :pendingJson, updated_at_ms = :updatedAtMs " +
             "WHERE project_id = :projectId",
     )
-    suspend fun updatePending(projectId: String, pendingJson: String, updatedAtMs: Long)
+    suspend fun updatePending(projectId: String, pendingJson: String?, updatedAtMs: Long)
 
     /** Promotes the pending snapshot to the committed document. */
     @Transaction

@@ -385,7 +385,7 @@ class PreviewController @Inject constructor(
                 sourceOutUs = clip.sourceOutUs,
                 speed = clip.speed,
             )
-            if (kotlin.math.abs(player.playbackSpeed - speedNow) > 0.05f) {
+            if (kotlin.math.abs(player.playbackParameters.speed - speedNow) > 0.05f) {
                 player.setPlaybackSpeed(speedNow.coerceIn(0.1f, 8f))
             }
             player.volume = TimelineQueries.clipVolumeAt(clip, timeUs)

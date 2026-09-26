@@ -9,6 +9,7 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -209,8 +210,9 @@ fun TimelinePanel(
                         }
                     },
             ) {
+                val playheadColor = VitaTheme.extended.playhead
                 Canvas(Modifier.fillMaxSize()) {
-                    drawCircle(VitaTheme.extended.playhead, radius = size.minDimension / 2.4f)
+                    drawCircle(playheadColor, radius = size.minDimension / 2.4f)
                 }
             }
         }
@@ -458,6 +460,7 @@ private fun ItemBlock(
                 text = when (val source = item.source) {
                     is StickerSource.Emoji -> source.emoji
                     is StickerSource.BuiltIn -> source.stickerKey
+                    is StickerSource.Imported -> "★"
                 },
                 fontSize = 12.sp,
                 maxLines = 1,
@@ -504,7 +507,7 @@ private fun ItemBlock(
 }
 
 @Composable
-private fun TrimHandle(
+private fun BoxScope.TrimHandle(
     alignment: Alignment,
     pxPerUs: Float,
     anchors: List<Long>,
@@ -589,12 +592,14 @@ private fun ClipContent(
         }
     }
     if (item.reversed) {
-        Text(
-            "◀",
-            color = Color.White,
-            fontSize = 10.sp,
-            modifier = Modifier.align(Alignment.TopEnd).padding(2.dp),
-        )
+        Box(Modifier.fillMaxSize()) {
+            Text(
+                "◀",
+                color = Color.White,
+                fontSize = 10.sp,
+                modifier = Modifier.align(Alignment.TopEnd).padding(2.dp),
+            )
+        }
     }
 }
 
@@ -612,7 +617,7 @@ private fun WaveContent(
 
     LaunchedEffect(item.id, buckets, asset?.uri) {
         if (asset == null) return@LaunchedEffect
-        peaks = waveformExtractor.extract(asset.uri, buckets).peaks
+        peaks = waveformExtractor.extract(android.net.Uri.parse(asset.uri), buckets).peaks
     }
 
     val waveColor = VitaTheme.extended.waveform
