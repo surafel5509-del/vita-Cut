@@ -13,6 +13,7 @@ permissions:
 jobs:
   build-debug-apk:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -21,28 +22,39 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 17
+          java-version: "17"
 
       - name: Verify Java environment
+        shell: bash
         run: |
           echo "=== Java Version ==="
           java -version
           echo "=== JAVA_HOME ==="
           echo "$JAVA_HOME"
-          JAVA_MAJOR=$(java -version 2>&1 | head -1 | cut -d'"' -f2 | sed 's/^1\.\//' | cut -d'.' -f1)
-          if [ "$JAVA_MAJOR" -lt 17 ]; then
-            echo "Error: Java version is lower than 17 (detected: $JAVA_MAJOR)"
+
+          JAVA_MAJOR=$(java -version 2>&1 \
+            | awk -F '"' '/version/ {print $2}' \
+            | awk -F. '{print ($1 == "1" ? $2 : $1)}')
+
+          if ! [[ "$JAVA_MAJOR" =~ ^[0-9]+$ ]] || [ "$JAVA_MAJOR" -lt 17 ]; then
+            echo "Error: Java 17 or newer is required; detected: ${JAVA_MAJOR:-unknown}"
             exit 1
           fi
+
           echo "Java $JAVA_MAJOR is valid"
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
-        with:
-          packages: |
-            platform-tools
-            platforms;android-34
-            build-tools;34.0.0
+
+      - name: Install Android SDK packages
+        shell: bash
+        run: |
+          set -euxo pipefail
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager \
+            "platform-tools" \
+            "platforms;android-34" \
+            "build-tools;34.0.0"
 
       - name: Set up Gradle 9.1.1
         uses: gradle/actions/setup-gradle@v4
@@ -50,11 +62,13 @@ jobs:
           gradle-version: "9.1.1"
 
       - name: Fix gradlew permissions and line endings
+        shell: bash
         run: |
           sed -i 's/\r$//' ./gradlew
           chmod +x ./gradlew
 
       - name: Create temporary debug keystore
+        shell: bash
         run: |
           if [ -f "./debug.keystore" ]; then
             echo "debug.keystore already exists"
@@ -77,9 +91,11 @@ jobs:
           echo "debug.keystore is ready"
 
       - name: Build debug APK
+        shell: bash
         run: ./gradlew :app:assembleDebug --stacktrace --no-daemon
 
       - name: Verify APK exists
+        shell: bash
         run: |
           APK_PATH="app/build/outputs/apk/debug/app-debug.apk"
           if [ -f "$APK_PATH" ]; then
