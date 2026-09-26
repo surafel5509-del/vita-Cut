@@ -35,28 +35,30 @@ class AssistedCaptionProvider @Inject constructor(
         uri: Uri,
         languageTag: String,
         onProgress: (Float) -> Unit,
-    ): VitaResult<Transcript> = try {
-        val waveform = waveformExtractor.extract(uri, buckets = SEGMENT_BUCKETS, onProgress)
-        if (waveform.isEmpty || waveform.durationUs <= 0L) {
-            return VitaResult.Failure(VitaError.UnsupportedMedia("no-audio-track"))
+    ): VitaResult<Transcript> {
+        return try {
+            val waveform = waveformExtractor.extract(uri, buckets = SEGMENT_BUCKETS, onProgress)
+            if (waveform.isEmpty || waveform.durationUs <= 0L) {
+                return VitaResult.Failure(VitaError.UnsupportedMedia("no-audio-track"))
+            }
+            val bucketUs = waveform.durationUs / waveform.peaks.size.coerceAtLeast(1)
+            val segments = SpeechSegmenter.segment(waveform.peaks, bucketUs)
+            onProgress(1f)
+            if (segments.isEmpty()) {
+                return VitaResult.Failure(VitaError.CapabilityUnavailable("captions_no_speech_detected"))
+            }
+            VitaResult.Success(
+                Transcript(
+                    languageTag = languageTag,
+                    cues = segments.map { TranscriptCue(it.startUs, it.endUs, text = "") },
+                    engineId = id,
+                    needsReview = true,
+                ),
+            )
+        } catch (t: Throwable) {
+            VitaLog.w(TAG, "Assisted transcription failed: ${t.message}")
+            VitaResult.Failure(VitaError.CorruptMedia(t.message ?: "transcription"))
         }
-        val bucketUs = waveform.durationUs / waveform.peaks.size.coerceAtLeast(1)
-        val segments = SpeechSegmenter.segment(waveform.peaks, bucketUs)
-        onProgress(1f)
-        if (segments.isEmpty()) {
-            return VitaResult.Failure(VitaError.CapabilityUnavailable("captions_no_speech_detected"))
-        }
-        VitaResult.Success(
-            Transcript(
-                languageTag = languageTag,
-                cues = segments.map { TranscriptCue(it.startUs, it.endUs, text = "") },
-                engineId = id,
-                needsReview = true,
-            ),
-        )
-    } catch (t: Throwable) {
-        VitaLog.w(TAG, "Assisted transcription failed: ${t.message}")
-        VitaResult.Failure(VitaError.CorruptMedia(t.message ?: "transcription"))
     }
 
     companion object {

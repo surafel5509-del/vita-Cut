@@ -5,6 +5,7 @@ import com.vitacut.core.model.TrackPoint
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.sign
 
 /**
  * Auto-reframe math: given subject-interest observations over time (from ML Kit object
@@ -117,8 +118,8 @@ object AutoReframeAnalyzer {
         val halfW = cropW / 2f
         val halfH = cropH / 2f
         val points = mutableListOf<TrackPoint>()
-        var prevX = smoothedX.first().coerceIn(halfW, 1f - halfW).toFloat()
-        var prevY = smoothedY.first().coerceIn(halfH, 1f - halfH).toFloat()
+        var prevX = smoothedX.first().coerceIn(halfW.toDouble(), (1f - halfW).toDouble()).toFloat()
+        var prevY = smoothedY.first().coerceIn(halfH.toDouble(), (1f - halfH).toDouble()).toFloat()
         var prevT = usable.first().timeUs
 
         for (i in usable.indices) {
@@ -143,7 +144,7 @@ object AutoReframeAnalyzer {
 
     private fun approach(current: Float, target: Float, maxTravel: Float): Float {
         val delta = target - current
-        return if (abs(delta) <= maxTravel) target else current + maxTravel * kotlin.math.signum(delta)
+        return if (abs(delta) <= maxTravel) target else current + maxTravel * sign(delta)
     }
 
     private fun movingAverage(values: List<Double>, window: Int): List<Double> =

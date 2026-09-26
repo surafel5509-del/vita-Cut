@@ -102,12 +102,12 @@ class SubjectSegmenter @Inject constructor(
             ?: return source // no mask produced → keep original (graceful)
         val width = source.width
         val height = source.height
-        val output = source.copy(Bitmap.Config.ARGB_8888, mutable = true)
+        val output = source.copy(Bitmap.Config.ARGB_8888, true)
         val pixels = IntArray(width * height)
         output.getPixels(pixels, 0, width, 0, 0, width, height)
         mask.rewind()
         for (i in 0 until width * height) {
-            val confidence = if (mask.hasRemaining()) mask.float.coerceIn(0f, 1f) else 0f
+            val confidence = if (mask.hasRemaining()) mask.get().coerceIn(0f, 1f) else 0f
             val pixel = pixels[i]
             val alpha = (Color.alpha(pixel) * confidence).toInt()
             pixels[i] = (alpha shl 24) or (pixel and 0x00FFFFFF)

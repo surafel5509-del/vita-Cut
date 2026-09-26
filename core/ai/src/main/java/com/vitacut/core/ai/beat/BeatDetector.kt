@@ -128,7 +128,7 @@ object BeatDetector {
             }
         }
         // Require at least 30% support to claim a tempo.
-        return if (bestCount >= max(2, values.size * 0.3f).toInt()) best else null
+        return if (bestCount >= max(2, (values.size * 0.3f).toInt())) best else null
     }
 
     /** Snaps each beat to the nearest grid point of period [periodUs], keeping monotonic order. */
