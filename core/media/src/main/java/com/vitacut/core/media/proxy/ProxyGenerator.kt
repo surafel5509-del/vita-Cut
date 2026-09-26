@@ -4,10 +4,11 @@ import android.content.Context
 import android.net.Uri
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MimeTypes
-import androidx.media3.effect.Scale
+import androidx.media3.effect.Presentation
+import androidx.media3.transformer.Composition
 import androidx.media3.transformer.EditedMediaItem
 import androidx.media3.transformer.EditedMediaItemSequence
-import androidx.media3.transformer.Composition
+import androidx.media3.transformer.Effects
 import androidx.media3.transformer.ExportException
 import androidx.media3.transformer.ExportResult
 import androidx.media3.transformer.Transformer
@@ -22,6 +23,7 @@ import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.resume
+import kotlin.math.roundToInt
 
 /**
  * Generates low-resolution H.264 proxy files for large sources (PERFORMANCE mode).
@@ -50,12 +52,13 @@ class ProxyGenerator @Inject constructor(
             return@withContext VitaResult.Failure(VitaError.UnsupportedMedia("source already small"))
         }
         val scale = maxDimension.toFloat() / longest
+        val outputHeight = (sourceHeight * scale).roundToInt().coerceAtLeast(2)
         val outputFile = File(context.cacheDir, "proxies/proxy_${System.currentTimeMillis()}.mp4")
         outputFile.parentFile?.mkdirs()
 
-        suspendCancellableCoroutine { continuation ->
+        suspendCancellableCoroutine<VitaResult<File>> { continuation ->
             val transformer = Transformer.Builder(context)
-                .setVideoMimeType(MimeTypes.VIDEO_MIME_TYPE_VIDEO_H264)
+                .setVideoMimeType(MimeTypes.VIDEO_H264)
                 .addListener(object : Transformer.Listener {
                     override fun onCompleted(composition: Composition, result: ExportResult) {
                         if (continuation.isActive) continuation.resume(VitaResult.Success(outputFile))
@@ -70,7 +73,12 @@ class ProxyGenerator @Inject constructor(
                         outputFile.delete()
                         if (continuation.isActive) {
                             continuation.resume(
-                                VitaResult.Failure(VitaError.ExportFailed(exception.message ?: "proxy", exception.errorCode)),
+                                VitaResult.Failure(
+                                    VitaError.ExportFailed(
+                                        exception.message ?: "proxy",
+                                        exception.errorCode,
+                                    ),
+                                ),
                             )
                         }
                     }
@@ -80,14 +88,15 @@ class ProxyGenerator @Inject constructor(
             val mediaItem = MediaItem.Builder().setUri(sourceUri).build()
             val edited = EditedMediaItem.Builder(mediaItem)
                 .setEffects(
-                    androidx.media3.transformer.Effects(
+                    Effects(
                         /* audioProcessors= */ emptyList(),
-                        // Scale keeps aspect ratio; Transformer writes the scaled size out.
-                        /* videoEffects= */ listOf(Scale(scale, scale)),
+                        /* videoEffects= */ listOf(Presentation.createForHeight(outputHeight)),
                     ),
                 )
                 .build()
-            val composition = Composition.Builder(EditedMediaItemSequence(edited)).build()
+            val composition = Composition.Builder(
+                EditedMediaItemSequence.Builder(edited).build(),
+            ).build()
 
             continuation.invokeOnCancellation {
                 runCatching { transformer.cancel() }

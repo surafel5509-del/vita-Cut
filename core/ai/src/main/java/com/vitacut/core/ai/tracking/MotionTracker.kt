@@ -52,7 +52,7 @@ class MotionTracker @Inject constructor(
     ): VitaResult<TrackPath> = withContext(Dispatchers.Default) {
         val retriever = MediaMetadataRetriever()
         try {
-            retriever.setDataSource(context, uri, emptyMap())
+            retriever.setDataSource(context, uri)
             val width = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH)
                 ?.toIntOrNull() ?: return@withContext VitaResult.Failure(VitaError.UnsupportedMedia("no-video-track"))
             val height = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT)

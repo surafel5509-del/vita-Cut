@@ -55,7 +55,7 @@ class MediaStoreScanner @Inject constructor(
             results += queryCollection(
                 collection = MediaStore.Files.getContentUri("external"),
                 selection = "${MediaStore.Files.FileColumns.MEDIA_TYPE} = ?",
-                selectionArgs = arrayOf(MediaStore.MEDIA_TYPE_VIDEO.toString()),
+                selectionArgs = arrayOf(MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO.toString()),
                 kind = MediaKind.VIDEO,
                 query = query,
             )
@@ -113,9 +113,11 @@ class MediaStoreScanner @Inject constructor(
                 "${MediaStore.MediaColumns.DISPLAY_NAME} LIKE ?",
             ).joinToString(" AND ")
         }
-        val effectiveArgs = if (query.isBlank()) selectionArgs else {
-            (selectionArgs?.toList() ?: emptyList()) + "%$query%"
-        }.toTypedArray()
+        val effectiveArgs: Array<String>? = if (query.isBlank()) {
+            selectionArgs
+        } else {
+            ((selectionArgs?.toList() ?: emptyList()) + "%$query%").toTypedArray()
+        }
 
         val out = mutableListOf<ScannedMedia>()
         val resolver = context.contentResolver

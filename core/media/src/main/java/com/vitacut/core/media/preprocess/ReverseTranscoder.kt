@@ -51,7 +51,7 @@ class ReverseTranscoder @Inject constructor(
         var codec: MediaCodec? = null
         var muxer: MediaMuxer? = null
         try {
-            retriever.setDataSource(context, sourceUri, emptyMap())
+            retriever.setDataSource(context, sourceUri)
 
             var width = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH)
                 ?.toIntOrNull() ?: 1280

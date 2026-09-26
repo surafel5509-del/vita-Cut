@@ -123,7 +123,7 @@ class ThumbnailProvider @Inject constructor(
         // A fresh retriever per call: instances are not thread-safe, so no sharing/locking needed.
         val retriever = MediaMetadataRetriever()
         return try {
-            retriever.setDataSource(context, uri, emptyMap())
+            retriever.setDataSource(context, uri)
             val frame = retriever.getFrameAtTime(
                 timeUs.coerceAtLeast(0L),
                 MediaMetadataRetriever.OPTION_CLOSEST_SYNC,
@@ -132,7 +132,7 @@ class ThumbnailProvider @Inject constructor(
         } catch (t: Throwable) {
             // OPTION_CLOSEST_SYNC can fail on sparse keyframes; retry once with CLOSEST.
             runCatching {
-                retriever.setDataSource(context, uri, emptyMap())
+                retriever.setDataSource(context, uri)
                 val frame = retriever.getFrameAtTime(timeUs.coerceAtLeast(0L), MediaMetadataRetriever.OPTION_CLOSEST)
                 frame?.let { scaleDown(it, targetWidth, targetHeight) }
             }.getOrNull()

@@ -6,6 +6,7 @@ import androidx.media3.transformer.Composition
 import androidx.media3.transformer.DefaultEncoderFactory
 import androidx.media3.transformer.ExportException
 import androidx.media3.transformer.ExportResult
+import androidx.media3.transformer.ProgressHolder
 import androidx.media3.transformer.Transformer
 import androidx.media3.transformer.AudioEncoderSettings
 import androidx.media3.transformer.VideoEncoderSettings
@@ -18,9 +19,12 @@ import com.vitacut.core.rendering.overlay.OverlayComposer
 import com.vitacut.core.rendering.pipeline.EffectsPipelineBuilder
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import javax.inject.Inject
@@ -127,29 +131,14 @@ class ExportEngine @Inject constructor(
         val transformer = Transformer.Builder(context)
             .setVideoMimeType(
                 if (plan.settings.videoCodec == ExportVideoCodec.HEVC) {
-                    MimeTypes.VIDEO_MIME_TYPE_VIDEO_H265
+                    MimeTypes.VIDEO_H265
                 } else {
-                    MimeTypes.VIDEO_MIME_TYPE_VIDEO_H264
+                    MimeTypes.VIDEO_H264
                 },
             )
-            .setAudioMimeType(MimeTypes.AUDIO_MIME_TYPE_AUDIO_AAC)
+            .setAudioMimeType(MimeTypes.AUDIO_AAC)
             .setEncoderFactory(encoderFactory)
             .addListener(object : Transformer.Listener {
-                override fun onProgress(composition: Composition, progressPercent: Int, bitrate: Long) {
-                    val elapsed = System.currentTimeMillis() - startedAtMs
-                    val eta = if (progressPercent in 1..99) {
-                        (elapsed * (100 - progressPercent) / progressPercent)
-                    } else null
-                    trySend(
-                        ExportState.Running(
-                            percent = progressPercent.coerceIn(0, 100),
-                            bitrateKbps = bitrate / 1000,
-                            elapsedMs = elapsed,
-                            estimatedRemainingMs = eta,
-                        ),
-                    )
-                }
-
                 override fun onCompleted(composition: Composition, result: ExportResult) {
                     val finalFile = File(tempFile.absolutePath.removeSuffix(".part"))
                     val renamed = tempFile.renameTo(finalFile)
@@ -194,7 +183,29 @@ class ExportEngine @Inject constructor(
 
         transformer.start(composition, tempFile.absolutePath)
 
+        val progressJob = launch {
+            val holder = ProgressHolder()
+            while (isActive) {
+                delay(250)
+                val state = transformer.getProgress(holder)
+                if (state == Transformer.PROGRESS_STATE_AVAILABLE) {
+                    val elapsed = System.currentTimeMillis() - startedAtMs
+                    val percent = holder.progress.coerceIn(0, 100)
+                    val eta = if (percent in 1..99) elapsed * (100 - percent) / percent else null
+                    trySend(
+                        ExportState.Running(
+                            percent = percent,
+                            bitrateKbps = 0L,
+                            elapsedMs = elapsed,
+                            estimatedRemainingMs = eta,
+                        ),
+                    )
+                }
+            }
+        }
+
         awaitClose {
+            progressJob.cancel()
             runCatching { transformer.cancel() }
             if (tempFile.exists()) runCatching { tempFile.delete() }
         }
